@@ -52,28 +52,36 @@ namespace VSIconSwitcher
             ResourceReplacement.Options.VS10Folder = vs10Path;
             ResourceReplacement.Options.VS11Folder = vs11Path;
 
-            form.ProgressMax = 2 * ReplacementList.VS11Ultimate.Length;
+            form.ProgressMax = 2 * ReplacementList.VS11Ultimate.Count();
             form.CurrentProgress = 0;
 
-            if (!Directory.Exists(backupPath))
+            try
             {
-                Directory.CreateDirectory(backupPath);
-            }
+                form.Enabled = false;
+                if (!Directory.Exists(backupPath))
+                {
+                    Directory.CreateDirectory(backupPath);
+                }
 
-            form.Status = "Backing up files";
-            foreach (ResourceReplacement r in ReplacementList.VS11Ultimate)
-            {
-                r.Backup();
-                form.CurrentProgress++;
+                form.Status = "Backing up files";
+                foreach (ResourceReplacement r in ReplacementList.VS11Ultimate)
+                {
+                    r.Backup();
+                    form.CurrentProgress++;
+                }
+                form.Status = "Patching resources";
+                foreach (ResourceReplacement r in ReplacementList.VS11Ultimate)
+                {
+                    r.DoReplace();
+                    form.CurrentProgress++;
+                }
+                form.Status = "Running devenv /setup";
+                RunDevenvSetup(vs11Path);
             }
-            form.Status = "Patching resources";
-            foreach (ResourceReplacement r in ReplacementList.VS11Ultimate)
+            finally
             {
-                r.DoReplace();
-                form.CurrentProgress++;
+                form.Enabled = true;
             }
-            form.Status = "Running devenv /setup";
-            RunDevenvSetup(vs11Path);
         }
 
         static void Undo(string vs11Path, string backupPath)
@@ -83,16 +91,24 @@ namespace VSIconSwitcher
 
             form.Status = "Undoing changes";
             form.CurrentProgress = 0;
-            form.ProgressMax = ReplacementList.VS11Ultimate.Length;
+            form.ProgressMax = ReplacementList.VS11Ultimate.Count();
 
-            foreach (ResourceReplacement r in ReplacementList.VS11Ultimate)
+            try
             {
-                r.Undo();
-                form.CurrentProgress++;
-            }
+                form.Enabled = false;
+                foreach (ResourceReplacement r in ReplacementList.VS11Ultimate)
+                {
+                    r.Undo();
+                    form.CurrentProgress++;
+                }
 
-            form.Status = "Running devenv /setup";
-            RunDevenvSetup(vs11Path);
+                form.Status = "Running devenv /setup";
+                RunDevenvSetup(vs11Path);
+            }
+            finally
+            {
+                form.Enabled = true;
+            }
         }
 
         static string DefaultVS10Path
@@ -103,6 +119,7 @@ namespace VSIconSwitcher
                 if (k != null)
                 {
                     string installDir = k.GetValue("InstallDir") as string;
+                    installDir = installDir.Substring(0, installDir.IndexOf("Common7"));
                     k.Close();
                     if (installDir != null)
                     {
@@ -121,6 +138,7 @@ namespace VSIconSwitcher
                 if (k != null)
                 {
                     string installDir = k.GetValue("InstallDir") as string;
+                    installDir = installDir.Substring(0, installDir.IndexOf("Common7"));
                     k.Close();
                     if (installDir != null)
                     {
@@ -137,11 +155,12 @@ namespace VSIconSwitcher
 
             Task.Factory.StartNew(() =>
             {
-                Process p = Process.Start(Path.Combine(folder, "devenv.exe"), "/setup");
+                Process p = Process.Start(Path.Combine(folder, "Common7\\IDE\\devenv.exe"), "/setup");
                 p.WaitForExit();
             }).ContinueWith(t =>
             {
                 form.Status = null;
+                form.CurrentProgress = 0;
             }, syncContext);
         }
 

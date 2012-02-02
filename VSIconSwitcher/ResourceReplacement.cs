@@ -100,9 +100,7 @@ namespace VSIconSwitcher
             List<Resource> resourcesToReplace = new List<Resource>();
             foreach (Resource res in srcInfo[resType])
             {
-                Debug.Assert(res.Name.IsIntResource());
-
-                if (Ids.Any(id => id == res.Name.Id.ToInt32()))
+                if (res.Name.IsIntResource() && Ids.Any(id => id == res.Name.Id.ToInt32()))
                 {
                     // Find matching resource in destination file
                     Resource dstRes = dstInfo[resType].Single(dr => dr.Name.Equals(res.Name));

@@ -29,6 +29,21 @@ namespace VSIconSwitcher
         public int CurrentProgress { get { return m_progressBar.Value; } set { m_progressBar.Value = value; } }
         public int ProgressMax { set { m_progressBar.Maximum = value; } }
 
+        public bool Enabled
+        {
+            set
+            {
+                m_vs10BrowseButton.Enabled = value;
+                m_vs10PathTextBox.Enabled = value;
+                m_vs11BrowseButton.Enabled = value;
+                m_vs11PathTextBox.Enabled = value;
+                m_backupPathTextBox.Enabled = value;
+                m_patchButton.Enabled = value;
+                m_undoBotton.Enabled = value;
+                //m_quitButton.Enabled = value;
+            }
+        }
+
         private void m_patchButton_Click(object sender, EventArgs e)
         {
             PatchButtonClicked(this, e);

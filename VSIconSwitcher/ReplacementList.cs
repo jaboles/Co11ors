@@ -1,31 +1,77 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using System.IO;
+using System.Diagnostics;
 
 namespace VSIconSwitcher
 {
-    public static class ReplacementList
+    public class ReplacementList
     {
-        public static ResourceReplacement[] VS11Ultimate = new ResourceReplacement[] {
-            new ResourceReplacement("devenv.exe", ResourceType.Icon, 1200, 1202, 1203, 6826),
-            new ResourceReplacement("1033\\cmddefui.dll", ResourceType.Bitmap,
-                new Range(2001, 2008),
-                new Range(2012, 2017),
-                new Range(2020),
-                new Range(2022, 2035)),
-            new ResourceReplacement("1033\\ExtWizrdUI.dll", ResourceType.Icon, 174),
-            new ResourceReplacement("1033\\ExtWizrdUI.dll", ResourceType.Icon, 174),
-            new ResourceReplacement("1033\\msenvui.dll", ResourceType.Icon, 1200, 4911),
-            new ResourceReplacement("1033\\msenvui.dll", ResourceType.Bitmap, 300, 304, 305, 6650, 6651),
-            new ResourceReplacement("msenv.dll", ResourceType.Bitmap, 327, 328, 1268, 1423, 1425, 1427, 6000, 6100, 7003),
-            new ResourceReplacement("msenv.dll", ResourceType.Icon,
-                new Range(300),
-                new Range(1207),
-                new Range(6807, 6808),
-                new Range(6810, 6827),
-                new Range(6830)),
-            
-        };
+        private static IDictionary<string, IEnumerable<ResourceReplacement>> s_lists = new Dictionary<string, IEnumerable<ResourceReplacement>>(); 
+
+        public static IEnumerable<ResourceReplacement> VS11Ultimate { get { return GetOrRead("VS11Ultimate.txt"); } }
+
+        public static IEnumerable<ResourceReplacement> GetOrRead(string name)
+        {
+            if (s_lists.ContainsKey(name))
+            {
+                return s_lists[name];
+            }
+
+            List<ResourceReplacement> list = new List<ResourceReplacement>();
+
+            StreamReader sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(string.Format("VSIconSwitcher.{0}", name)));
+            while (!sr.EndOfStream)
+            {
+                string fileName = sr.ReadLine().Trim();
+                if (string.IsNullOrEmpty(fileName))
+                    fileName = sr.ReadLine().Trim();
+                string typeIdentifier = sr.ReadLine().Trim();
+                string idString = sr.ReadLine().Trim();
+                ResourceType resType = 0;
+
+                if (typeIdentifier.Equals("Icon") || typeIdentifier.Equals("I"))
+                {
+                    resType = ResourceType.Icon;
+                }
+                else if (typeIdentifier.Equals("Bitmap") || typeIdentifier.Equals("B"))
+                {
+                    resType = ResourceType.Bitmap;
+                }
+                else
+                {
+                    Debug.Fail("Unknown type identifier: " + typeIdentifier);
+                }
+
+                List<int> ids = new List<int>();
+                foreach (string s in idString.Split(','))
+                {
+                    string idStr = s.Trim();
+                    if (idStr.Contains('-'))
+                    {
+                        string[] parts = idStr.Split('-');
+                        int lower = Convert.ToInt32(parts[0].Trim());
+                        int upper = Convert.ToInt32(parts[1].Trim());
+                        Debug.Assert(lower <= upper, "Range should be specified <lower>-<upper>");
+                        for (int i = lower; i <= upper; i++)
+                        {
+                            ids.Add(i);
+                        }
+                    }
+                    else
+                    {
+                        ids.Add(Convert.ToInt32(idStr));
+                    }
+                }
+
+                list.Add(new ResourceReplacement(fileName, resType, ids.ToArray()));
+            }
+
+            s_lists[name] = list;
+            return list;
+        }
     }
 }
