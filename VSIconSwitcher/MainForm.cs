@@ -15,6 +15,7 @@ namespace VSIconSwitcher
         public MainForm()
         {
             InitializeComponent();
+            Status = null;
         }
 
         public event EventHandler<EventArgs> PatchButtonClicked;
@@ -24,6 +25,9 @@ namespace VSIconSwitcher
         public string VS10Path { get { return m_vs10PathTextBox.Text; } set { m_vs10PathTextBox.Text = value; } }
         public string VS11Path { get { return m_vs11PathTextBox.Text; } set { m_vs11PathTextBox.Text = value; } }
         public string BackupPath { get { return m_backupPathTextBox.Text; } set { m_backupPathTextBox.Text = value; } }
+        public string Status { set { m_statusTextbox.Text = string.IsNullOrEmpty(value)? "Ready" : value; } }
+        public int CurrentProgress { get { return m_progressBar.Value; } set { m_progressBar.Value = value; } }
+        public int ProgressMax { set { m_progressBar.Maximum = value; } }
 
         private void m_patchButton_Click(object sender, EventArgs e)
         {

@@ -41,6 +41,9 @@
             this.m_vs10BrowseButton = new System.Windows.Forms.Button();
             this.m_vs11BrowseButton = new System.Windows.Forms.Button();
             this.m_quitButton = new System.Windows.Forms.Button();
+            this.m_progressBar = new System.Windows.Forms.ProgressBar();
+            this.m_statusLabel = new System.Windows.Forms.Label();
+            this.m_statusTextbox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // m_descriptionLabel
@@ -104,7 +107,7 @@
             // m_patchButton
             // 
             this.m_patchButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.m_patchButton.Location = new System.Drawing.Point(122, 278);
+            this.m_patchButton.Location = new System.Drawing.Point(122, 324);
             this.m_patchButton.Name = "m_patchButton";
             this.m_patchButton.Size = new System.Drawing.Size(143, 23);
             this.m_patchButton.TabIndex = 6;
@@ -116,7 +119,7 @@
             // 
             this.m_undoBotton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.m_undoBotton.Enabled = false;
-            this.m_undoBotton.Location = new System.Drawing.Point(271, 278);
+            this.m_undoBotton.Location = new System.Drawing.Point(271, 324);
             this.m_undoBotton.Name = "m_undoBotton";
             this.m_undoBotton.Size = new System.Drawing.Size(131, 23);
             this.m_undoBotton.TabIndex = 7;
@@ -167,7 +170,8 @@
             // m_quitButton
             // 
             this.m_quitButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.m_quitButton.Location = new System.Drawing.Point(408, 278);
+            this.m_quitButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.m_quitButton.Location = new System.Drawing.Point(408, 324);
             this.m_quitButton.Name = "m_quitButton";
             this.m_quitButton.Size = new System.Drawing.Size(71, 23);
             this.m_quitButton.TabIndex = 12;
@@ -175,12 +179,41 @@
             this.m_quitButton.UseVisualStyleBackColor = true;
             this.m_quitButton.Click += new System.EventHandler(this.m_quitButton_Click);
             // 
+            // m_progressBar
+            // 
+            this.m_progressBar.Location = new System.Drawing.Point(238, 287);
+            this.m_progressBar.Name = "m_progressBar";
+            this.m_progressBar.Size = new System.Drawing.Size(237, 16);
+            this.m_progressBar.TabIndex = 13;
+            // 
+            // m_statusLabel
+            // 
+            this.m_statusLabel.AutoSize = true;
+            this.m_statusLabel.Location = new System.Drawing.Point(14, 271);
+            this.m_statusLabel.Name = "m_statusLabel";
+            this.m_statusLabel.Size = new System.Drawing.Size(37, 13);
+            this.m_statusLabel.TabIndex = 14;
+            this.m_statusLabel.Text = "Status";
+            // 
+            // m_statusTextbox
+            // 
+            this.m_statusTextbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.m_statusTextbox.Location = new System.Drawing.Point(12, 287);
+            this.m_statusTextbox.Name = "m_statusTextbox";
+            this.m_statusTextbox.ReadOnly = true;
+            this.m_statusTextbox.Size = new System.Drawing.Size(220, 20);
+            this.m_statusTextbox.TabIndex = 15;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.m_quitButton;
-            this.ClientSize = new System.Drawing.Size(490, 313);
+            this.ClientSize = new System.Drawing.Size(490, 359);
+            this.Controls.Add(this.m_statusTextbox);
+            this.Controls.Add(this.m_statusLabel);
+            this.Controls.Add(this.m_progressBar);
             this.Controls.Add(this.m_quitButton);
             this.Controls.Add(this.m_vs11BrowseButton);
             this.Controls.Add(this.m_vs10BrowseButton);
@@ -217,6 +250,9 @@
         private System.Windows.Forms.Button m_vs10BrowseButton;
         private System.Windows.Forms.Button m_vs11BrowseButton;
         private System.Windows.Forms.Button m_quitButton;
+        private System.Windows.Forms.ProgressBar m_progressBar;
+        private System.Windows.Forms.Label m_statusLabel;
+        private System.Windows.Forms.TextBox m_statusTextbox;
     }
 }
 

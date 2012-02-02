@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -9,6 +12,8 @@ namespace VSIconSwitcher
 {
     static class Program
     {
+        static MainForm form;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -18,7 +23,7 @@ namespace VSIconSwitcher
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            MainForm form = new MainForm();
+            form = new MainForm();
             form.PatchButtonClicked += (o, e) =>
             {
                 BackupAndPatch(form.VS10Path, form.VS11Path, form.BackupPath);
@@ -26,7 +31,7 @@ namespace VSIconSwitcher
 
             form.UndoButtonClicked += (o, e) =>
             {
-                Undo(form.VS10Path, form.BackupPath);
+                Undo(form.VS11Path, form.BackupPath);
             };
 
             form.QuitButtonClicked += (o, e) =>
@@ -43,10 +48,51 @@ namespace VSIconSwitcher
 
         static void BackupAndPatch(string vs10Path, string vs11Path, string backupPath)
         {
+            ResourceReplacement.Options.BackupFolder = backupPath;
+            ResourceReplacement.Options.VS10Folder = vs10Path;
+            ResourceReplacement.Options.VS11Folder = vs11Path;
+
+            form.ProgressMax = 2 * ReplacementList.VS11Ultimate.Length;
+            form.CurrentProgress = 0;
+
+            if (!Directory.Exists(backupPath))
+            {
+                Directory.CreateDirectory(backupPath);
+            }
+
+            form.Status = "Backing up files";
+            foreach (ResourceReplacement r in ReplacementList.VS11Ultimate)
+            {
+                r.Backup();
+                form.CurrentProgress++;
+            }
+            form.Status = "Patching resources";
+            foreach (ResourceReplacement r in ReplacementList.VS11Ultimate)
+            {
+                r.DoReplace();
+                form.CurrentProgress++;
+            }
+            form.Status = "Running devenv /setup";
+            RunDevenvSetup(vs11Path);
         }
 
-        static void Undo(string vs10Path, string backupPath)
+        static void Undo(string vs11Path, string backupPath)
         {
+            ResourceReplacement.Options.BackupFolder = backupPath;
+            ResourceReplacement.Options.VS11Folder = vs11Path;
+
+            form.Status = "Undoing changes";
+            form.CurrentProgress = 0;
+            form.ProgressMax = ReplacementList.VS11Ultimate.Length;
+
+            foreach (ResourceReplacement r in ReplacementList.VS11Ultimate)
+            {
+                r.Undo();
+                form.CurrentProgress++;
+            }
+
+            form.Status = "Running devenv /setup";
+            RunDevenvSetup(vs11Path);
         }
 
         static string DefaultVS10Path
@@ -83,6 +129,20 @@ namespace VSIconSwitcher
                 }
                 return null;
             }
+        }
+
+        static void RunDevenvSetup(string folder)
+        {
+            var syncContext = TaskScheduler.FromCurrentSynchronizationContext();
+
+            Task.Factory.StartNew(() =>
+            {
+                Process p = Process.Start(Path.Combine(folder, "devenv.exe"), "/setup");
+                p.WaitForExit();
+            }).ContinueWith(t =>
+            {
+                form.Status = null;
+            }, syncContext);
         }
 
         static string DefaultBackupPath
