@@ -26,11 +26,14 @@ namespace VSIconSwitcher
             StreamReader sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(string.Format("VSIconSwitcher.{0}", name)));
             while (!sr.EndOfStream)
             {
-                string fileName = sr.ReadLine().Trim();
-                if (string.IsNullOrEmpty(fileName))
-                    fileName = sr.ReadLine().Trim();
-                string typeIdentifier = sr.ReadLine().Trim();
-                string idString = sr.ReadLine().Trim();
+                string line = sr.ReadLine().Trim();
+                if (string.IsNullOrEmpty(line))
+                    line = sr.ReadLine().Trim();
+
+                string[] stringParts = line.Split(';');
+                string fileName = stringParts[1];
+                string typeIdentifier = stringParts[0];
+                string idString = stringParts[2];
                 ResourceType resType = 0;
 
                 if (typeIdentifier.Equals("Icon") || typeIdentifier.Equals("I"))

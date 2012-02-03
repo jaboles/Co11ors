@@ -7,18 +7,26 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using System.Globalization;
 
 namespace VSIconSwitcher
 {
-    static class Program
+    public class Program
     {
-        static MainForm form;
+        private MainForm form;
+        private VSInfo m_srcVS;
+        private VSInfo m_dstVS;
 
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
+        {
+            new Program();
+        }
+
+        public Program()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -39,14 +47,20 @@ namespace VSIconSwitcher
                 Application.Exit();
             };
 
-            form.VS10Path = DefaultVS10Path;
-            form.VS11Path = DefaultVS11Path;
+            m_srcVS = new VSInfo("10.0");
+            m_dstVS = new VSInfo("11.0");
+
+            form.VS10Path = m_srcVS.VSRoot;
+            form.VS11Path = m_dstVS.VSRoot;
             form.BackupPath = DefaultBackupPath;
+
+            foreach (CultureInfo ci in m_srcVS.InstalledLanguages)
+                System.Windows.Forms.MessageBox.Show(ci.LCID.ToString());
 
             Application.Run(form);
         }
 
-        static void BackupAndPatch(string vs10Path, string vs11Path, string backupPath)
+        void BackupAndPatch(string vs10Path, string vs11Path, string backupPath)
         {
             ResourceReplacement.Options.BackupFolder = backupPath;
             ResourceReplacement.Options.VS10Folder = vs10Path;
@@ -84,7 +98,7 @@ namespace VSIconSwitcher
             }
         }
 
-        static void Undo(string vs11Path, string backupPath)
+        void Undo(string vs11Path, string backupPath)
         {
             ResourceReplacement.Options.BackupFolder = backupPath;
             ResourceReplacement.Options.VS11Folder = vs11Path;
@@ -111,7 +125,7 @@ namespace VSIconSwitcher
             }
         }
 
-        static string DefaultVS10Path
+        string DefaultVS10Path
         {
             get
             {
@@ -130,7 +144,7 @@ namespace VSIconSwitcher
             }
         }
 
-        static string DefaultVS11Path
+        string DefaultVS11Path
         {
             get
             {
@@ -149,7 +163,7 @@ namespace VSIconSwitcher
             }
         }
 
-        static void RunDevenvSetup(string folder)
+        void RunDevenvSetup(string folder)
         {
             var syncContext = TaskScheduler.FromCurrentSynchronizationContext();
 
@@ -164,7 +178,7 @@ namespace VSIconSwitcher
             }, syncContext);
         }
 
-        static string DefaultBackupPath
+        string DefaultBackupPath
         {
             get
             {
