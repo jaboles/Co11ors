@@ -26,30 +26,30 @@ namespace VSIconSwitcher
     }
 
 
-    public class ResourceReplacement : AssetReplacement
+    public class NativeResourceReplacement : AssetReplacement
     {
         public static void Initialize(Func<string, string> pathTranslator)
         {
             s_pathTranslate = pathTranslator;
         }
 
-        private ResourceReplacement(string filename, ResourceType resType)
+        private NativeResourceReplacement(string filename, ResourceType resType)
             : base(filename)
         {
             m_resType = resType;
         }
 
-        public ResourceReplacement(string filename, ResourceType resType, params int[] ids)
+        public NativeResourceReplacement(string filename, ResourceType resType, params int[] ids)
             : this(filename, resType)
         {
             m_ids = ids;
         }
-        public ResourceReplacement(string filename, ResourceType resType, int id)
+        public NativeResourceReplacement(string filename, ResourceType resType, int id)
             : this(filename, resType)
         {
             m_ids = new int[] { id };
         }
-        public ResourceReplacement(string filename, ResourceType resType, params Range[] ranges)
+        public NativeResourceReplacement(string filename, ResourceType resType, params Range[] ranges)
             : this(filename, resType)
         {
             List<int> ids = new List<int>();

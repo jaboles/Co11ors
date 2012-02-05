@@ -79,7 +79,7 @@ namespace VSIconSwitcher
                         }
                     }
 
-                    list.Add(new ResourceReplacement(fileName, resType, ids.ToArray()));
+                    list.Add(new NativeResourceReplacement(fileName, resType, ids.ToArray()));
                 }
             }
 
