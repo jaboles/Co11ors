@@ -49,7 +49,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssetReplacementOptions.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="AssetReplacement.cs" />
+    <Compile Include="FileReplacement.cs" />
+    <Compile Include="LimitedConcurrencyTaskScheduler.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

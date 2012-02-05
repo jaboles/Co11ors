@@ -22,6 +22,11 @@ namespace VSIconSwitcher
             m_installedLanguages = new List<CultureInfo>();
         }
 
+        public static IEnumerable<VSInfo> FindInstalled(string requestedVersion)
+        {
+            return s_knownVersions.Where(info => info.Version.Equals(requestedVersion) && info.CheckIfExists());
+        }
+
         public VSAppId AppID
         {
             get;
@@ -113,7 +118,18 @@ namespace VSIconSwitcher
             }
         }
 
+        public bool CheckIfExists()
+        {
+            return !string.IsNullOrEmpty(VSRoot);
+        }
+
         private CultureInfo m_defaultLanguage;
         private IList<CultureInfo> m_installedLanguages;
+
+        // A list of the known products
+        private static IEnumerable<VSInfo> s_knownVersions = new VSInfo[] {
+            new VSInfo("10.0", VSAppId.VisualStudio),
+            new VSInfo("11.0", VSAppId.VisualStudio)
+        };
     }
 }

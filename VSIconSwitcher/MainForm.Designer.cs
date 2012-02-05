@@ -128,7 +128,6 @@
             // m_undoBotton
             // 
             this.m_undoBotton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.m_undoBotton.Enabled = false;
             this.m_undoBotton.Location = new System.Drawing.Point(359, 395);
             this.m_undoBotton.Name = "m_undoBotton";
             this.m_undoBotton.Size = new System.Drawing.Size(131, 23);

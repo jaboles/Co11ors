@@ -1,43 +1,53 @@
-﻿I;Common7\IDE\devenv.exe;1200,1202,1203,6826
-B;Common7\IDE\1033\cmddefui.dll;2001-2008,2012-2017,2020,2022-2035
-I;Common7\IDE\1033\ExtWizrdUI.dll;174
-I;Common7\IDE\1033\msenvui.dll;1200,4911
-B;Common7\IDE\1033\msenvui.dll;300,304,305,6650,6651
+﻿-- Recognized varables:
+-- [lcid]: Language ID e.g. "1033"
+-- [langshort]: Short language name e.g. "en"
+I;Common7\IDE\devenv.exe;1200,1202,1203,6826
+B;Common7\IDE\[lcid]\cmddefui.dll;2001-2008,2012-2017,2020,2022-2035
+I;Common7\IDE\[lcid]\ExtWizrdUI.dll;174
+I;Common7\IDE\[lcid]\msenvui.dll;1200,4911
+B;Common7\IDE\[lcid]\msenvui.dll;300,304,305,6650,6651
 B;Common7\IDE\msenv.dll;327,328,1268,1423,1425,1427,6000,6100,7003
 I;Common7\IDE\msenv.dll;300,1207,6807-6808,6810-6827,6830
-B;Common7\IDE\VS SCC\1033\TfsProviderui.dll;1,4003
-I;Common7\IDE\VS SCC\1033\TfsProviderui.dll;30000
-B;Common7\IDE\VS SCC\1033\VssProviderui.dll;1,4003
-I;Common7\IDE\VS SCC\1033\VssProviderui.dll;5000,30000
-B;Common7\IDE\Xml\1033\Microsoft.XmlEditorUI.dll;200
-I;Common7\IDE\Xml\1033\Microsoft.XmlEditorUI.dll;100-103,105,107-113
-B;Common7\Packages\Debugger\1033\vsdebugui.dll;297,299-302,308,5123,5124,5127
-B;Common7\Packages\1033\csspkgui.dll;200,4000,4100
-I;Common7\Packages\1033\csspkgui.dll;1
-I;Common7\Packages\1033\fpedsat.dll;12,14
-B;Common7\Packages\1033\htmledui.dll;217-219,221
-I;Common7\Packages\1033\mswebprjui.dll;405,11002
+F;Common7\IDE\ExtensibilityProjects\Mcpp\*.ico
+F;Common7\IDE\ExtensibilityProjects\Mcpp\[lcid]\*.ico
+F;Common7\IDE\ExtensibilityProjects\VCATL\*.ico
+F;Common7\IDE\ExtensibilityProjects\VCATL\[lcid]\*.ico
+B;Common7\IDE\VS SCC\[lcid]\TfsProviderui.dll;1,4003
+I;Common7\IDE\VS SCC\[lcid]\TfsProviderui.dll;30000
+B;Common7\IDE\VS SCC\[lcid]\VssProviderui.dll;1,4003
+I;Common7\IDE\VS SCC\[lcid]\VssProviderui.dll;5000,30000
+B;Common7\IDE\Xml\[lcid]\Microsoft.XmlEditorUI.dll;200
+I;Common7\IDE\Xml\[lcid]\Microsoft.XmlEditorUI.dll;100-103,105,107-113
+B;Common7\Packages\Debugger\[lcid]\vsdebugui.dll;297,299-302,308,5123,5124,5127
+B;Common7\Packages\[lcid]\csspkgui.dll;200,4000,4100
+I;Common7\Packages\[lcid]\csspkgui.dll;1
+I;Common7\Packages\[lcid]\fpedsat.dll;12,14
+B;Common7\Packages\[lcid]\htmledui.dll;217-219,221
+I;Common7\Packages\[lcid]\mswebprjui.dll;405,11002
 B;VC#\VCSPackages\csproj.dll;333
 I;VC#\VCSPackages\csproj.dll;100,101,4503,4504,4513,4515,4516-4538,4540-4558,4561-4566,4570-4572,4586-4592,4600-4603
-B;VC#\VCSPackages\1033\cslangsvcui.dll;248,249
-I;VC#\VCSPackages\1033\csprojui.dll;356
+B;VC#\VCSPackages\[lcid]\cslangsvcui.dll;248,249
+I;VC#\VCSPackages\[lcid]\csprojui.dll;356
 B;VB\Bin\msvbprj.dll;333
 I;VB\Bin\msvbprj.dll;100,101,4039,4500-4520,4522-4548,4551,4554,4556,4557,4559,4561-4563,4572-4582,22132
-I;VB\Bin\1033\msvbprjUI.dll;405
+I;VB\Bin\[lcid]\msvbprjUI.dll;405
 I;FSharp\FSPackages\FSharp.ProjectSystem.FSharp.dll;100-103
-B;Team Tools\Performance Tools\1033\perfpkgui.dll;103,105,115-120,123,124,129
-I;Team Tools\Performance Tools\1033\perfpkgui.dll;101,102,104,121
-I;Team Tools\Performance Tools\1033\TSDevPkgui.dll;100
+B;Team Tools\Performance Tools\[lcid]\perfpkgui.dll;103,105,115-120,123,124,129
+I;Team Tools\Performance Tools\[lcid]\perfpkgui.dll;101,102,104,121
+I;Team Tools\Performance Tools\[lcid]\TSDevPkgui.dll;100
 I;VC\vcpackages\resedit.dll;27000-27002,27009,27010
 I;VC\vcpackages\vcpkg.dll;4500-4502,4544,6128,9019,9020,9030-9044,9559,9562-9567,9574,9575,9580
 B;VC\vcpackages\VCProject.dll;204
 I;VC\vcpackages\VCProject.dll;1-27
-B;VC\vcpackages\1033\reseditui.dll;20644,26217-26230,26661,26917,26918,27212,28354,28363,28500,28517,28629,28630,28631,28656-28658
-I;VC\vcpackages\1033\reseditui.dll;26927-26930,26932,26935,27000-27010,27952
-B;VC\vcpackages\1033\vcpkgui.dll;1011
-I;VC\vcpackages\1033\vcpkgui.dll;6081-6089,6091,6093,6097,6103,6106,6108,6111-6118,9563-9564
-B;VC\vcpackages\1033\VCProjectUI.dll;101,109,111
-I;VC\vcpackages\1033\VCProjectUI.dll;1001
+B;VC\vcpackages\[lcid]\reseditui.dll;20644,26217-26230,26661,26917,26918,27212,28354,28363,28500,28517,28629,28630,28631,28656-28658
+I;VC\vcpackages\[lcid]\reseditui.dll;26927-26930,26932,26935,27000-27010,27952
+B;VC\vcpackages\[lcid]\vcpkgui.dll;1011
+I;VC\vcpackages\[lcid]\vcpkgui.dll;6081-6089,6091,6093,6097,6103,6106,6108,6111-6118,9563-9564
+B;VC\vcpackages\[lcid]\VCProjectUI.dll;101,109,111
+I;VC\vcpackages\[lcid]\VCProjectUI.dll;1001
+F;VC\vcaddclass\*.ico
+F;VC\vcprojectitems\*.ico
+F;VC\vcprojects\*.ico
 I;Visual Studio Tools for Office\vspkgs\VSTAProject.dll;201,600,601
 B;Visual Studio Tools for Office\vspkgs\VSTOAddinClientPkg.dll;200-208
 I;Visual Studio Tools for Office\vspkgs\VSTOAddinClientPkg.dll;300-340
@@ -45,5 +55,5 @@ B;Visual Studio Tools for Office\vspkgs\VSTOExcelClientPkg.dll;200,203
 I;Visual Studio Tools for Office\vspkgs\VSTOExcelClientPkg.dll;300-301
 B;Visual Studio Tools for Office\vspkgs\VSTOWordClientPkg.dll;200-208
 I;Visual Studio Tools for Office\vspkgs\VSTOWordClientPkg.dll;300-301
-B;Visual Studio Tools for Office\vspkgs\1033\VSTOExcelClientPkgUI.dll;120-122
-B;Visual Studio Tools for Office\vspkgs\1033\VSTOWordClientPkgUI.dll;120
+B;Visual Studio Tools for Office\vspkgs\[lcid]\VSTOExcelClientPkgUI.dll;120-122
+B;Visual Studio Tools for Office\vspkgs\[lcid]\VSTOWordClientPkgUI.dll;120

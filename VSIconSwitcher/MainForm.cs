@@ -95,12 +95,14 @@ namespace VSIconSwitcher
 
         private void m_vs10PathTextBox_TextChanged(object sender, EventArgs e)
         {
-            VS10PathChanged(this, e);
+            if (VS10PathChanged != null)
+                VS10PathChanged(this, e);
         }
 
         private void m_vs11PathTextBox_TextChanged(object sender, EventArgs e)
         {
-            VS11PathChanged(this, e);
+            if (VS11PathChanged != null)
+                VS11PathChanged(this, e);
         }
     }
 }

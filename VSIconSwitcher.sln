@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSIconSwitcher", "VSIconSwitcher\VSIconSwitcher.csproj", "{82A2815E-7936-45D6-B72E-0D009A9895C8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mrd", "mrd\mrd.csproj", "{B8E57386-CEE0-4942-BE33-59BD76A33C63}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,6 +15,10 @@ Global
 		{82A2815E-7936-45D6-B72E-0D009A9895C8}.Debug|x86.Build.0 = Debug|x86
 		{82A2815E-7936-45D6-B72E-0D009A9895C8}.Release|x86.ActiveCfg = Release|x86
 		{82A2815E-7936-45D6-B72E-0D009A9895C8}.Release|x86.Build.0 = Release|x86
+		{B8E57386-CEE0-4942-BE33-59BD76A33C63}.Debug|x86.ActiveCfg = Debug|x86
+		{B8E57386-CEE0-4942-BE33-59BD76A33C63}.Debug|x86.Build.0 = Debug|x86
+		{B8E57386-CEE0-4942-BE33-59BD76A33C63}.Release|x86.ActiveCfg = Release|x86
+		{B8E57386-CEE0-4942-BE33-59BD76A33C63}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

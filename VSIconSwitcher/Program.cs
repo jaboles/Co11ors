@@ -47,8 +47,8 @@ namespace VSIconSwitcher
                 Application.Exit();
             };
 
-            m_srcVS = new VSInfo("10.0");
-            m_dstVS = new VSInfo("11.0");
+            m_srcVS = VSInfo.FindInstalled("10.0").First();
+            m_dstVS = VSInfo.FindInstalled("11.0").First();
 
             form.VS10Path = m_srcVS.VSRoot;
             form.VS11Path = m_dstVS.VSRoot;
@@ -62,67 +62,87 @@ namespace VSIconSwitcher
 
         void BackupAndPatch(string vs10Path, string vs11Path, string backupPath)
         {
-            ResourceReplacement.Options.BackupFolder = backupPath;
-            ResourceReplacement.Options.VS10Folder = vs10Path;
-            ResourceReplacement.Options.VS11Folder = vs11Path;
+            var context = TaskScheduler.FromCurrentSynchronizationContext();
+
+            AssetReplacement.Options.BackupFolder = backupPath;
+            AssetReplacement.Options.VS10Folder = vs10Path;
+            AssetReplacement.Options.VS11Folder = vs11Path;
 
             form.ProgressMax = 2 * ReplacementList.VS11Ultimate.Count();
             form.CurrentProgress = 0;
 
-            try
+            form.IsBusy = true;
+            form.Status = "Backing up files";
+            if (!Directory.Exists(backupPath))
             {
-                form.Enabled = false;
-                if (!Directory.Exists(backupPath))
-                {
-                    Directory.CreateDirectory(backupPath);
-                }
-
-                form.Status = "Backing up files";
-                foreach (ResourceReplacement r in ReplacementList.VS11Ultimate)
+                Directory.CreateDirectory(backupPath);
+            }
+            foreach (AssetReplacement r in ReplacementList.VS11Ultimate)
+            {
+                Task.Factory.StartNew(() =>
                 {
                     r.Backup();
+                }, CancellationToken.None, TaskCreationOptions.None, Scheduler).ContinueWith((task) =>
+                {
                     form.CurrentProgress++;
-                }
-                form.Status = "Patching resources";
-                foreach (ResourceReplacement r in ReplacementList.VS11Ultimate)
+                }, context);
+            }
+            form.Status = "Patching resources";
+            foreach (AssetReplacement r in ReplacementList.VS11Ultimate)
+            {
+                Task.Factory.StartNew(() =>
                 {
                     r.DoReplace();
+                }, CancellationToken.None, TaskCreationOptions.None, Scheduler).ContinueWith((task) =>
+                {
                     form.CurrentProgress++;
-                }
-                form.Status = "Running devenv /setup";
-                RunDevenvSetup(vs11Path);
+                }, context);
             }
-            finally
+            form.Status = "Running devenv /setup";
+            Task.Factory.StartNew(() =>
             {
-                form.Enabled = true;
-            }
+                RunDevenvSetup(vs11Path);
+            }, CancellationToken.None, TaskCreationOptions.None, Scheduler).ContinueWith((task) =>
+            {
+                form.Status = null;
+                form.CurrentProgress = 0;
+                form.IsBusy = false;
+            }, context);
         }
 
         void Undo(string vs11Path, string backupPath)
         {
-            ResourceReplacement.Options.BackupFolder = backupPath;
-            ResourceReplacement.Options.VS11Folder = vs11Path;
+            var context = TaskScheduler.FromCurrentSynchronizationContext();
+
+            AssetReplacement.Options.BackupFolder = backupPath;
+            AssetReplacement.Options.VS11Folder = vs11Path;
 
             form.Status = "Undoing changes";
             form.CurrentProgress = 0;
             form.ProgressMax = ReplacementList.VS11Ultimate.Count();
 
-            try
+            form.IsBusy = true;
+            foreach (AssetReplacement r in ReplacementList.VS11Ultimate)
             {
-                form.Enabled = false;
-                foreach (ResourceReplacement r in ReplacementList.VS11Ultimate)
+                Task.Factory.StartNew(() =>
                 {
                     r.Undo();
+                }, CancellationToken.None, TaskCreationOptions.None, Scheduler).ContinueWith((task) =>
+                {
                     form.CurrentProgress++;
-                }
+                }, context);
+            }
 
-                form.Status = "Running devenv /setup";
-                RunDevenvSetup(vs11Path);
-            }
-            finally
+            form.Status = "Running devenv /setup";
+            Task.Factory.StartNew(() =>
             {
-                form.Enabled = true;
-            }
+                RunDevenvSetup(vs11Path);
+            }, CancellationToken.None, TaskCreationOptions.None, Scheduler).ContinueWith((task) =>
+            {
+                form.Status = null;
+                form.CurrentProgress = 0;
+                form.IsBusy = false;
+            }, context);
         }
 
         string DefaultVS10Path
@@ -165,17 +185,8 @@ namespace VSIconSwitcher
 
         void RunDevenvSetup(string folder)
         {
-            var syncContext = TaskScheduler.FromCurrentSynchronizationContext();
-
-            Task.Factory.StartNew(() =>
-            {
-                Process p = Process.Start(Path.Combine(folder, "Common7\\IDE\\devenv.exe"), "/setup");
-                p.WaitForExit();
-            }).ContinueWith(t =>
-            {
-                form.Status = null;
-                form.CurrentProgress = 0;
-            }, syncContext);
+            Process p = Process.Start(Path.Combine(folder, "Common7\\IDE\\devenv.exe"), "/setup");
+            p.WaitForExit();
         }
 
         string DefaultBackupPath
@@ -185,5 +196,19 @@ namespace VSIconSwitcher
                 return Path.Combine(Path.GetTempPath(), "VsIconSwitcherBackup");
             }
         }
+
+        TaskScheduler Scheduler
+        {
+            get
+            {
+                if (m_scheduler == null)
+                {
+                    m_scheduler = new LimitedConcurrencyLevelTaskScheduler(1);
+                }
+                return m_scheduler;
+            }
+        }
+
+        private TaskScheduler m_scheduler;
     }
 }

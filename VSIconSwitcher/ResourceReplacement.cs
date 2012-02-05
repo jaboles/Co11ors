@@ -25,18 +25,17 @@ namespace VSIconSwitcher
         public int Upper { get; private set; }
     }
 
-    public class ResourceReplacementOptions
-    {
-        public string BackupFolder;
-        public string VS10Folder;
-        public string VS11Folder;
-    }
 
-    public class ResourceReplacement
+    public class ResourceReplacement : AssetReplacement
     {
-        private ResourceReplacement(string filename, ResourceType resType)
+        public static void Initialize(Func<string, string> pathTranslator)
         {
-            m_file = filename;
+            s_pathTranslate = pathTranslator;
+        }
+
+        private ResourceReplacement(string filename, ResourceType resType)
+            : base(filename)
+        {
             m_resType = resType;
         }
 
@@ -62,18 +61,7 @@ namespace VSIconSwitcher
             m_ids = ids.ToArray();
         }
 
-        public void Backup()
-        {
-            string src = Path.Combine(Options.VS11Folder, FilePath);
-            string dest = Path.Combine(Options.BackupFolder, Path.GetFileName(FilePath));
-
-            if (!File.Exists(dest))
-            {
-                File.Copy(src, dest, false);
-            }
-        }
-
-        public void DoReplace()
+        public override void DoReplace()
         {
             string src = Path.Combine(Options.VS10Folder, FilePath);
             string dest = Path.Combine(Options.VS11Folder, FilePath);
@@ -139,15 +127,6 @@ namespace VSIconSwitcher
             srcInfo.Unload();
         }
 
-        public void Undo()
-        {
-            string src = Path.Combine(Options.BackupFolder, Path.GetFileName(FilePath));
-            string dest = Path.Combine(Options.VS11Folder, FilePath);
-
-            File.Copy(src, dest, true);
-        }
-
-        public string FilePath { get { return m_file; } }
         public IEnumerable<int> Ids { get { return m_ids; } }
         public bool NeedsGAC
         {
@@ -160,12 +139,10 @@ namespace VSIconSwitcher
             }
         }
         public ResourceType ResourceType { get { return m_resType; } }
-        public static ResourceReplacementOptions Options { get { return s_options; } }
 
-        private string m_file;
         private IEnumerable<int> m_ids;
         private bool? m_needsGac;
         private ResourceType m_resType;
-        private static ResourceReplacementOptions s_options = new ResourceReplacementOptions();
+        private static Func<string, string> s_pathTranslate;
     }
 }
