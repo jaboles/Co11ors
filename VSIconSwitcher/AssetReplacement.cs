@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Diagnostics;
 
 namespace VSIconSwitcher
 {
@@ -10,7 +11,14 @@ namespace VSIconSwitcher
     {
         public AssetReplacement(string filename)
         {
-            m_file = filename;
+            m_srcFile = filename;
+            m_dstFile = filename;
+        }
+
+        public AssetReplacement(string srcFilename, string dstFilename)
+        {
+            m_srcFile = srcFilename;
+            m_dstFile = srcFilename;
         }
 
         public virtual void Backup()
@@ -75,9 +83,12 @@ namespace VSIconSwitcher
             }
         }
 
-        public string FilePath { get { return m_file; } }
+        public string FilePath { get { Debug.Assert(m_srcFile.Equals(m_dstFile), "Source file and destination file must match if using the FilePath property"); return m_srcFile; } }
+        public string SourceFilePath { get { return m_srcFile; } }
+        public string DestFilePath { get { return m_dstFile; } }
 
-        private string m_file;
+        private string m_srcFile;
+        private string m_dstFile;
         private static AssetReplacementOptions s_options;
     }
 }

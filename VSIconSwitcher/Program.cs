@@ -54,9 +54,6 @@ namespace VSIconSwitcher
             form.VS11Path = m_dstVS.VSRoot;
             form.BackupPath = DefaultBackupPath;
 
-            foreach (CultureInfo ci in m_srcVS.InstalledLanguages)
-                System.Windows.Forms.MessageBox.Show(ci.LCID.ToString());
-
             Application.Run(form);
         }
 

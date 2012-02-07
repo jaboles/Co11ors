@@ -15,7 +15,7 @@ namespace mrd
     {
         static void Main(string[] args)
         {
-            IEnumerable files = Directory.EnumerateFiles("c:\\Program Files (x86)\\Microsoft Visual Studio 11.0 - Copy - Copy", "*.dll", SearchOption.AllDirectories);
+            IEnumerable files = Directory.EnumerateFiles("c:\\Program Files (x86)\\Microsoft Visual Studio 10.0", "*.dll", SearchOption.AllDirectories);
             foreach (string f in files)
             {
                 Console.WriteLine("Checking assembly: {0}", f);
@@ -30,65 +30,85 @@ namespace mrd
         public Program(string path)
         {
             AssemblyDefinition ad = AssemblyDefinition.ReadAssembly(path);
-            Assembly dotNetAssembly = Assembly.LoadFrom(path);
+            Assembly dotNetAssembly = null;
+            try
+            {
+                dotNetAssembly = Assembly.LoadFrom(path);
+            }
+            catch (BadImageFormatException)
+            {
+                // Probably an x64 assembly. Throw if it isn't.
+                if (path.Contains("\\x64\\"))
+                    return;
+                else
+                    throw;
+            }
+            catch (FileLoadException)
+            {
+                return;
+            }
             string[] asdf = dotNetAssembly.GetManifestResourceNames();
             IList<string> unprocessedAssemblies = new List<string>();
-            foreach (Resource res in ad.MainModule.Resources)
+            foreach (Resource res in ad.Modules.SelectMany(m => m.Resources))
             {
                 EmbeddedResource er = res as EmbeddedResource;
-                Console.WriteLine("Resource name: {0}", er.Name);
-
-                string outputFolder = Path.Combine("c:\\mrd", Path.GetFileName(path), dotNetAssembly.GetName().Version.ToString());
-                if (!Directory.Exists(outputFolder))
-                    Directory.CreateDirectory(outputFolder);
-
-                if (res.Name.ToLower().EndsWith(".resources"))
+                if (er != null)
                 {
-                    string resourceFileBaseName = res.Name.Substring(0, res.Name.Length - 10);
+                    Console.WriteLine("Resource name: {0}", er.Name);
 
-                    ResourceManager rm = new ResourceManager(resourceFileBaseName, dotNetAssembly);
-                    try
+                    string outputFolder = Path.Combine("c:\\mrd", Path.GetFileName(path), dotNetAssembly.GetName().Version.ToString());
+
+                    if (res.Name.ToLower().EndsWith(".resources"))
                     {
-                        ResourceSet rs = rm.GetResourceSet(CultureInfo.CurrentCulture, true, true);
-                        IDictionaryEnumerator re = rs.GetEnumerator();
-                        while (re.MoveNext())
+                        string resourceFileBaseName = res.Name.Substring(0, res.Name.Length - 10);
+
+                        ResourceManager rm = new ResourceManager(resourceFileBaseName, dotNetAssembly);
+                        try
                         {
-                            Stream resStream = re.Value as Stream;
-                            if (resStream != null)
+                            ResourceSet rs = rm.GetResourceSet(CultureInfo.CurrentCulture, true, true);
+                            IDictionaryEnumerator re = rs.GetEnumerator();
+                            while (re.MoveNext())
                             {
-                                string outputDir = Path.Combine(outputFolder, resourceFileBaseName, Path.GetDirectoryName(re.Key.ToString()));
-                                if (!Directory.Exists(outputDir))
-                                    Directory.CreateDirectory(outputDir);
+                                Stream resStream = re.Value as Stream;
+                                if (resStream != null)
+                                {
+                                    string outputDir = Path.Combine(outputFolder, resourceFileBaseName, Path.GetDirectoryName(re.Key.ToString()));
+                                    if (!Directory.Exists(outputDir))
+                                        Directory.CreateDirectory(outputDir);
 
-                                string outputPath = Path.Combine(outputDir, Path.GetFileName(re.Key.ToString()));
+                                    string outputPath = Path.Combine(outputDir, Path.GetFileName(re.Key.ToString()));
 
-                                byte[] data = new byte[resStream.Length];
-                                resStream.Read(data, 0, (int)resStream.Length);
+                                    byte[] data = new byte[resStream.Length];
+                                    resStream.Read(data, 0, (int)resStream.Length);
 
-                                FileStream f = new FileStream(outputPath, FileMode.Create);
-                                f.Write(data, 0, data.Length);
-                                f.Close();
+                                    FileStream f = new FileStream(outputPath, FileMode.Create);
+                                    f.Write(data, 0, data.Length);
+                                    f.Close();
+                                }
                             }
                         }
+                        catch (MissingManifestResourceException)
+                        {
+                            unprocessedAssemblies.Add(res.Name);
+                        }
+                        catch (MissingSatelliteAssemblyException)
+                        {
+                            unprocessedAssemblies.Add(res.Name);
+                        }
                     }
-                    catch (MissingManifestResourceException)
+                    else
                     {
-                        unprocessedAssemblies.Add(res.Name);
-                    }
-                    catch (MissingSatelliteAssemblyException)
-                    {
-                        unprocessedAssemblies.Add(res.Name);
-                    }
-                }
-                else
-                {
-                    byte[] data = er.GetResourceData();
+                        byte[] data = er.GetResourceData();
 
-                    string outputPath = Path.Combine(outputFolder, Sanitize(res.Name));
+                        if (!Directory.Exists(outputFolder))
+                            Directory.CreateDirectory(outputFolder);
 
-                    FileStream f = new FileStream(outputPath, FileMode.Create);
-                    f.Write(data, 0, data.Length);
-                    f.Close();
+                        string outputPath = Path.Combine(outputFolder, Sanitize(res.Name));
+
+                        FileStream f = new FileStream(outputPath, FileMode.Create);
+                        f.Write(data, 0, data.Length);
+                        f.Close();
+                    }
                 }
             }
             if (unprocessedAssemblies.Count > 0)
