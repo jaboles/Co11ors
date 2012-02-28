@@ -49,9 +49,13 @@ namespace VSIconSwitcher
                 }
                 else if (typeIdentifier.Equals("Managed") || typeIdentifier.Equals("M"))
                 {
-                    string resourcesFilename = stringParts[2];
-                    string resourceNamePattern = stringParts[3];
-                    list.Add(new ManagedResourceReplacement(fileName, resourcesFilename, resourceNamePattern));
+                    string dstFilename = stringParts[2];
+                    string resourcesFilename = stringParts.Length > 3? stringParts[3] : null;
+                    string resourceNamePattern = stringParts.Length > 4?  stringParts[4] : null;
+
+                    if (string.IsNullOrWhiteSpace(dstFilename)) dstFilename = null;
+
+                    list.Add(new ManagedResourceReplacement(fileName, dstFilename, resourcesFilename, resourceNamePattern));
                 }
                 else
                 {

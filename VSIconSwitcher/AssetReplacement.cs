@@ -19,7 +19,9 @@ namespace VSIconSwitcher
         public AssetReplacement(string srcFilename, string dstFilename)
         {
             m_srcFile = srcFilename;
-            m_dstFile = srcFilename;
+            if (dstFilename == null)
+                dstFilename = srcFilename;
+            m_dstFile = dstFilename;
         }
 
         /// <summary>
@@ -66,10 +68,15 @@ namespace VSIconSwitcher
                 string file = fileCopyItem.Item1;
                 string backupLocation = fileCopyItem.Item2;
 
-                if (!File.Exists(backupLocation))
-                {
-                    File.Copy(file, backupLocation, false);
-                }
+                BackupItem(file, backupLocation);
+            }
+        }
+
+        public virtual void BackupItem(string itemPath, string backupLocation)
+        {
+            if (!File.Exists(backupLocation))
+            {
+                File.Copy(itemPath, backupLocation, false);
             }
         }
 
@@ -93,10 +100,15 @@ namespace VSIconSwitcher
                 string file = fileCopyItem.Item1;
                 string backupLocation = fileCopyItem.Item2;
 
-                if (File.Exists(backupLocation))
-                {
-                    File.Copy(backupLocation, file, false);
-                }
+                UndoItem(file, backupLocation);
+            }
+        }
+
+        public virtual void UndoItem(string itemPath, string backupLocation)
+        {
+            if (File.Exists(backupLocation))
+            {
+                File.Copy(backupLocation, itemPath, false);
             }
         }
 

@@ -15,9 +15,10 @@ namespace mrd
     {
         static void Main(string[] args)
         {
-            //string searchPath = "c:\\Program Files (x86)\\Microsoft Visual Studio 10.0";
-            string searchPath = @"C:\Windows\Microsoft.NET\assembly\GAC_MSIL";
+            string searchPath = "c:\\Program Files (x86)\\Microsoft Visual Studio 11.0";
+            //string searchPath = @"C:\Windows\Microsoft.NET\assembly\GAC_MSIL";
             string filenameMask = "*.dll";
+            string outputPath = "c:\\mrd_VS11";
 
             IEnumerable files = Directory.EnumerateFiles(searchPath, filenameMask, SearchOption.AllDirectories);
             foreach (string f in files)
@@ -26,12 +27,12 @@ namespace mrd
                 if (IsManaged(f))
                 {
                     Console.WriteLine("Found managed assembly. Processing...", f);
-                    new Program(f);
+                    new Program(f, outputPath);
                 }
             }
         }
 
-        public Program(string path)
+        public Program(string path, string outputBaseFolder)
         {
             AssemblyDefinition ad = AssemblyDefinition.ReadAssembly(path);
             Assembly dotNetAssembly = null;
@@ -55,7 +56,6 @@ namespace mrd
             {
                 return;
             }
-            string[] asdf = dotNetAssembly.GetManifestResourceNames();
             IList<string> unprocessedAssemblies = new List<string>();
             foreach (Resource res in ad.Modules.SelectMany(m => m.Resources))
             {
@@ -64,7 +64,7 @@ namespace mrd
                 {
                     Console.WriteLine("Resource name: {0}", er.Name);
 
-                    string outputFolder = Path.Combine("c:\\mrd", Path.GetFileName(path), dotNetAssembly.GetName().Version.ToString());
+                    string outputFolder = Path.Combine(outputBaseFolder, Path.GetFileName(path), dotNetAssembly.GetName().Version.ToString());
 
                     if (res.Name.ToLower().EndsWith(".resources"))
                     {
