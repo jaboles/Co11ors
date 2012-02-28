@@ -10,3 +10,9 @@ M;Common7\IDE\Microsoft.VSDesigner.Management.dll;;*.bmp
 M;Common7\IDE\Microsoft.VSDesigner.Management.dll;;*.ico
 M;Common7\IDE\PrivateAssemblies\MetricsPackage.dll;;*.bmp
 M;Common7\IDE\csformatui.dll;;*.bmp
+M;Common7\IDE\PrivateAssemblies\StanCore.dll;;*.bmp
+M;Common7\IDE\PrivateAssemblies\StanCore.dll;;*.png
+M;Team Tools\Performance Tools\PerfPkg.dll;;*.png
+M;Common7\IDE\Microsoft.Workflow.VSDesigner.dll;;*.bmp
+M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.Tools.Office.AddInProject.dll;;*.bmp
+M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.Tools.Applications.Project.dll;;*.bmp
