@@ -15,7 +15,11 @@ namespace mrd
     {
         static void Main(string[] args)
         {
-            IEnumerable files = Directory.EnumerateFiles("c:\\Program Files (x86)\\Microsoft Visual Studio 10.0", "*.dll", SearchOption.AllDirectories);
+            //string searchPath = "c:\\Program Files (x86)\\Microsoft Visual Studio 10.0";
+            string searchPath = @"C:\Windows\Microsoft.NET\assembly\GAC_MSIL";
+            string filenameMask = "*.dll";
+
+            IEnumerable files = Directory.EnumerateFiles(searchPath, filenameMask, SearchOption.AllDirectories);
             foreach (string f in files)
             {
                 Console.WriteLine("Checking assembly: {0}", f);
@@ -38,12 +42,16 @@ namespace mrd
             catch (BadImageFormatException)
             {
                 // Probably an x64 assembly. Throw if it isn't.
-                if (path.Contains("\\x64\\"))
+                if (path.Contains("\\x64\\") || path.Contains("\\GAC_64\\"))
                     return;
                 else
-                    throw;
+                    return;
             }
             catch (FileLoadException)
+            {
+                return;
+            }
+            catch (FileNotFoundException)
             {
                 return;
             }

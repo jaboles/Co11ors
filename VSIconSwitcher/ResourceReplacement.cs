@@ -61,11 +61,8 @@ namespace VSIconSwitcher
             m_ids = ids.ToArray();
         }
 
-        public override void DoReplace()
+        public override void CopyResources(string src, string dest)
         {
-            string src = Path.Combine(Options.VS10Folder, FilePath);
-            string dest = Path.Combine(Options.VS11Folder, FilePath);
-
             ResourceInfo srcInfo = new ResourceInfo();
             ResourceInfo dstInfo = new ResourceInfo();
             srcInfo.Load(src);

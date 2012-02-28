@@ -8,10 +8,10 @@ I;Common7\IDE\[lcid]\msenvui.dll;1200,4911
 B;Common7\IDE\[lcid]\msenvui.dll;300,304,305,6650,6651
 B;Common7\IDE\msenv.dll;327,328,1268,1423,1425,1427,6000,6100,7003
 I;Common7\IDE\msenv.dll;300,1207,6807-6808,6810-6827,6830
-F;Common7\IDE\ExtensibilityProjects\Mcpp\*.ico
-F;Common7\IDE\ExtensibilityProjects\Mcpp\[lcid]\*.ico
-F;Common7\IDE\ExtensibilityProjects\VCATL\*.ico
-F;Common7\IDE\ExtensibilityProjects\VCATL\[lcid]\*.ico
+F;Common7\IDE\Extensibility Projects\Mcpp\*.ico
+F;Common7\IDE\Extensibility Projects\Mcpp\[lcid]\*.ico
+F;Common7\IDE\Extensibility Projects\VCATL\*.ico
+F;Common7\IDE\Extensibility Projects\VCATL\[lcid]\*.ico
 B;Common7\IDE\VS SCC\[lcid]\TfsProviderui.dll;1,4003
 I;Common7\IDE\VS SCC\[lcid]\TfsProviderui.dll;30000
 B;Common7\IDE\VS SCC\[lcid]\VssProviderui.dll;1,4003

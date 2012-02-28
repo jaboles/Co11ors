@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace VSIconSwitcher
 {
@@ -21,54 +22,81 @@ namespace VSIconSwitcher
             m_dstFile = srcFilename;
         }
 
-        public virtual void Backup()
+        /// <summary>
+        /// Expands filenames
+        /// </summary>
+        /// <param name="filenamePattern"></param>
+        /// <returns>Returns an enumerable of string-pairs which contain the expanded filename, and the backup location.</returns>
+        public IEnumerable<Tuple<string, string>> ExpandFilenames(string directory, string filenamePattern)
         {
-            string src = Path.Combine(Options.VS11Folder, FilePath);
-            string dest = Path.Combine(Options.BackupFolder, Path.GetFileName(FilePath));
+            List<Tuple<string, string>> list = new List<Tuple<string,string>>();
 
-            if (FilePath.Contains('?') || FilePath.Contains('*'))
+            // Need to do culture token expansion first, so that Directory.EnumerateFiles can be used to do wildcard expansion.
+            IEnumerable<Tuple<string, string>> localisedFilenamePatterns = ReplaceCultureTokens(filenamePattern);
+
+            foreach (Tuple<string, string> culturisedItem in localisedFilenamePatterns)
             {
-                IEnumerable<string> matchingFiles = Directory.EnumerateFiles(Path.GetDirectoryName(src), Path.GetFileName(src));
-                foreach (string f in matchingFiles)
+                string localisedFilenamePattern = culturisedItem.Item1;
+                string cultureSpecificBackupFolder = culturisedItem.Item2;
+
+                if (filenamePattern.Contains('?') || filenamePattern.Contains('*'))
                 {
-                    dest = Path.Combine(Options.BackupFolder, Path.GetFileName(f));
-                    if (!File.Exists(dest))
+                    string fullPattern = Path.Combine(directory, localisedFilenamePattern);
+                    IEnumerable<string> matchingFiles = Directory.EnumerateFiles(Path.GetDirectoryName(fullPattern), Path.GetFileName(fullPattern));
+                    foreach (string f in matchingFiles)
                     {
-                        File.Copy(f, dest, false);
+                        string backupLocation = Path.Combine(Options.BackupFolder, Path.GetFileName(f));
+                        list.Add(new Tuple<string, string>(f, backupLocation));
                     }
                 }
-            }
-            else
-            {
-                if (!File.Exists(dest))
+                else
                 {
-                    File.Copy(src, dest, false);
+                    string backupLocation = Path.Combine(Options.BackupFolder, Path.GetFileName(localisedFilenamePattern));
+                    string f = Path.Combine(directory, localisedFilenamePattern);
+                    list.Add(new Tuple<string, string>(f, backupLocation));
+                }
+            }
+            return list;
+        }
+
+        public virtual void Backup()
+        {
+            foreach (Tuple<string, string> fileCopyItem in ExpandFilenames(Options.VS11Folder, DestFilePath))
+            {
+                string file = fileCopyItem.Item1;
+                string backupLocation = fileCopyItem.Item2;
+
+                if (!File.Exists(backupLocation))
+                {
+                    File.Copy(file, backupLocation, false);
                 }
             }
         }
 
-        public abstract void DoReplace();
+        public void DoReplace()
+        {
+            foreach (Tuple<string, string> item in ExpandFilenames(Options.VS11Folder, DestFilePath))
+            {
+                string resSrc = ExpandFilenames(Options.VS10Folder, SourceFilePath).First().Item1;
+                string resDst = item.Item1;
+
+                CopyResources(resSrc, resDst);
+            }
+        }
+
+        public abstract void CopyResources(string sourceFile, string destFile);
 
         public virtual void Undo()
         {
-            string src = Path.Combine(Options.BackupFolder, Path.GetFileName(FilePath));
-            string dest = Path.Combine(Options.VS11Folder, FilePath);
+            foreach (Tuple<string, string> fileCopyItem in ExpandFilenames(Options.VS11Folder, DestFilePath))
+            {
+                string file = fileCopyItem.Item1;
+                string backupLocation = fileCopyItem.Item2;
 
-            if (FilePath.Contains('?') || FilePath.Contains('*'))
-            {
-                IEnumerable<string> matchingFiles = Directory.EnumerateFiles(Path.GetDirectoryName(dest), Path.GetFileName(dest));
-                foreach (string f in matchingFiles)
+                if (File.Exists(backupLocation))
                 {
-                    src = Path.Combine(Options.BackupFolder, Path.GetFileName(f));
-                    if (!File.Exists(f))
-                    {
-                        File.Copy(src, f, false);
-                    }
+                    File.Copy(backupLocation, file, false);
                 }
-            }
-            else
-            {
-                File.Copy(src, dest, true);
             }
         }
 
@@ -81,6 +109,35 @@ namespace VSIconSwitcher
 
                 return s_options;
             }
+        }
+
+        private IEnumerable<Tuple<string, string>> ReplaceCultureTokens(string path)
+        {
+            IList<Tuple<string, string>> list = new List<Tuple<string, string>>();
+            if (ContainsCultureTokens(path))
+            {
+                foreach (CultureInfo c in Options.InstalledCultures)
+                {
+                    list.Add(ReplaceCultureTokens(path, c));
+                }
+            }
+            else
+            {
+                // No replacement necessary
+                list.Add(new Tuple<string,string>(path, string.Empty));
+            }
+            return list;
+        }
+
+        private Tuple<string, string> ReplaceCultureTokens(string path, CultureInfo cultureInfo)
+        {
+            path = path.Replace("[lcid]", cultureInfo.LCID.ToString());
+            return new Tuple<string, string>(path, cultureInfo.LCID.ToString());
+        }
+
+        public bool ContainsCultureTokens(string path)
+        {
+            return path.Contains("[lcid]");
         }
 
         public string FilePath { get { Debug.Assert(m_srcFile.Equals(m_dstFile), "Source file and destination file must match if using the FilePath property"); return m_srcFile; } }

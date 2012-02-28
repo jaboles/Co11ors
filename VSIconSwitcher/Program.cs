@@ -34,12 +34,12 @@ namespace VSIconSwitcher
             form = new MainForm();
             form.PatchButtonClicked += (o, e) =>
             {
-                BackupAndPatch(form.VS10Path, form.VS11Path, form.BackupPath);
+                BackupAndPatch();
             };
 
             form.UndoButtonClicked += (o, e) =>
             {
-                Undo(form.VS11Path, form.BackupPath);
+                Undo();
             };
 
             form.QuitButtonClicked += (o, e) =>
@@ -51,68 +51,53 @@ namespace VSIconSwitcher
             m_dstVS = VSInfo.FindInstalled("11.0").First();
 
             form.VS10Path = m_srcVS.VSRoot;
+            form.VS10DetectedProduct = m_srcVS.Version;
+            form.VS10Languages = string.Join(", ", m_srcVS.InstalledLanguages.Select(c => c.Name));
             form.VS11Path = m_dstVS.VSRoot;
+            form.VS11DetectedProduct = m_dstVS.Version;
+            form.VS11Languages = string.Join(", ", m_dstVS.InstalledLanguages.Select(c => c.Name));
             form.BackupPath = DefaultBackupPath;
 
             Application.Run(form);
         }
 
-        void BackupAndPatch(string vs10Path, string vs11Path, string backupPath)
+        void BackupAndPatch()
         {
+            SetReplacementOptions();
             var context = TaskScheduler.FromCurrentSynchronizationContext();
-
-            AssetReplacement.Options.BackupFolder = backupPath;
-            AssetReplacement.Options.VS10Folder = vs10Path;
-            AssetReplacement.Options.VS11Folder = vs11Path;
 
             form.ProgressMax = 2 * ReplacementList.VS11Ultimate.Count();
             form.CurrentProgress = 0;
 
             form.IsBusy = true;
             form.Status = "Backing up files";
-            if (!Directory.Exists(backupPath))
+            if (!Directory.Exists(AssetReplacement.Options.BackupFolder))
             {
-                Directory.CreateDirectory(backupPath);
+                Directory.CreateDirectory(AssetReplacement.Options.BackupFolder);
             }
             foreach (AssetReplacement r in ReplacementList.VS11Ultimate)
             {
-                Task.Factory.StartNew(() =>
-                {
-                    r.Backup();
-                }, CancellationToken.None, TaskCreationOptions.None, Scheduler).ContinueWith((task) =>
-                {
-                    form.CurrentProgress++;
-                }, context);
+                r.Backup();
+                form.CurrentProgress++;
             }
             form.Status = "Patching resources";
             foreach (AssetReplacement r in ReplacementList.VS11Ultimate)
             {
-                Task.Factory.StartNew(() =>
-                {
-                    r.DoReplace();
-                }, CancellationToken.None, TaskCreationOptions.None, Scheduler).ContinueWith((task) =>
-                {
-                    form.CurrentProgress++;
-                }, context);
+                r.DoReplace();
+                form.CurrentProgress++;
             }
             form.Status = "Running devenv /setup";
-            Task.Factory.StartNew(() =>
-            {
-                RunDevenvSetup(vs11Path);
-            }, CancellationToken.None, TaskCreationOptions.None, Scheduler).ContinueWith((task) =>
-            {
-                form.Status = null;
-                form.CurrentProgress = 0;
-                form.IsBusy = false;
-            }, context);
+            RunDevenvSetup(AssetReplacement.Options.VS11Folder);
+
+            form.Status = null;
+            form.CurrentProgress = 0;
+            form.IsBusy = false;
         }
 
-        void Undo(string vs11Path, string backupPath)
+        void Undo()
         {
+            SetReplacementOptions();
             var context = TaskScheduler.FromCurrentSynchronizationContext();
-
-            AssetReplacement.Options.BackupFolder = backupPath;
-            AssetReplacement.Options.VS11Folder = vs11Path;
 
             form.Status = "Undoing changes";
             form.CurrentProgress = 0;
@@ -133,7 +118,7 @@ namespace VSIconSwitcher
             form.Status = "Running devenv /setup";
             Task.Factory.StartNew(() =>
             {
-                RunDevenvSetup(vs11Path);
+                RunDevenvSetup(AssetReplacement.Options.VS11Folder);
             }, CancellationToken.None, TaskCreationOptions.None, Scheduler).ContinueWith((task) =>
             {
                 form.Status = null;
@@ -142,42 +127,13 @@ namespace VSIconSwitcher
             }, context);
         }
 
-        string DefaultVS10Path
+        void SetReplacementOptions()
         {
-            get
-            {
-                RegistryKey k = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\VisualStudio\10.0");
-                if (k != null)
-                {
-                    string installDir = k.GetValue("InstallDir") as string;
-                    installDir = installDir.Substring(0, installDir.IndexOf("Common7"));
-                    k.Close();
-                    if (installDir != null)
-                    {
-                        return installDir;
-                    }
-                }
-                return null;
-            }
-        }
-
-        string DefaultVS11Path
-        {
-            get
-            {
-                RegistryKey k = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\VisualStudio\11.0");
-                if (k != null)
-                {
-                    string installDir = k.GetValue("InstallDir") as string;
-                    installDir = installDir.Substring(0, installDir.IndexOf("Common7"));
-                    k.Close();
-                    if (installDir != null)
-                    {
-                        return installDir;
-                    }
-                }
-                return null;
-            }
+            AssetReplacement.Options.BackupFolder = form.BackupPath;
+            AssetReplacement.Options.VS10Folder = form.VS10Path;
+            AssetReplacement.Options.VS11Folder = form.VS11Path;
+            AssetReplacement.Options.SourceCulture = m_srcVS.DefaultLanguage;
+            AssetReplacement.Options.InstalledCultures = m_dstVS.InstalledLanguages;
         }
 
         void RunDevenvSetup(string folder)

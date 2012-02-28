@@ -45,23 +45,30 @@ namespace VSIconSwitcher
             {
                 if (m_defaultLanguage == null)
                 {
-                    RegistryKey k = Registry.LocalMachine.OpenSubKey(string.Format(@"Software\Microsoft\{0}\{1}\Setup", AppID, Version));
-                    if (k != null)
+                    if (InstalledLanguages.Count() == 1)
                     {
-                        string firstLanguage = k.GetValue("FirstLanguagePackLCID") as string;
-                        k.Close();
-                        if (firstLanguage != null)
-                        {
-                            m_defaultLanguage = CultureInfo.GetCultureInfo(Convert.ToInt32(firstLanguage));
-                        }
-                        else
-                        {
-                            throw new Exception("Could not determine the default installed VS language");
-                        }
+                        return InstalledLanguages.Single();
                     }
                     else
                     {
-                        throw new Exception("Could not open registry key to the default installed VS language");
+                        RegistryKey k = Registry.LocalMachine.OpenSubKey(string.Format(@"Software\Microsoft\{0}\{1}\Setup", AppID, Version));
+                        if (k != null)
+                        {
+                            string firstLanguage = k.GetValue("FirstLanguagePackLCID") as string;
+                            k.Close();
+                            if (firstLanguage != null)
+                            {
+                                m_defaultLanguage = CultureInfo.GetCultureInfo(Convert.ToInt32(firstLanguage));
+                            }
+                            else
+                            {
+                                throw new Exception("Multiple languages were found - could not determine the default installed VS language");
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("Could not open registry key to the default installed VS language");
+                        }
                     }
                 }
                 return m_defaultLanguage;

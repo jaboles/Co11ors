@@ -26,7 +26,17 @@ namespace VSIconSwitcher
         public static void SkipVerification(string assemblyName)
         {
             string output = ExecGacUtil(string.Format("-Vr {0}", GetAssemblyName(assemblyName)));
-            if (output.Contains(""))
+            if (output.Contains("Verification entry added for assembly"))
+            {
+                return;
+            }
+            throw new Exception("Unknown output received from gacutil.exe: " + output);
+        }
+
+        public static void UnskipVerification(string assemblyName)
+        {
+            string output = ExecGacUtil(string.Format("-Vu {0}", GetAssemblyName(assemblyName)));
+            if (output.Contains("Verification entry for assembly"))
             {
                 return;
             }
