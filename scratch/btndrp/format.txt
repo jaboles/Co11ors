@@ -1,0 +1,22 @@
+// format enum, name, formatname, x, y, bitdepth, # per strip, resource id, icon
+// format enum should match with the enum found in orderin.txt
+// 	Currently they are msobfHiResHiClr, msobfLoResHiClr, msobfHiResLoClr, msobfLoResLoClr
+// File names will be nameXXYY
+//      where name is the name
+//      XX is the # of the bstrip
+//      YY is the two character formatname
+// formatname: Name of the format. This will be appended to
+//             icon names to find the appropriate bitmap
+// x,y: The width and height of the icon
+// bitdepth: Bit depth of the colors
+// #: The number of icons per strip
+// Resource id: The base resource id for this format. -1 uses the default, which is either
+//		700, or one greater than the resource the previous group used
+// icon: If this is named, this file is used, if a file is missing. Use "none" if you don't 
+//		want stand in icons
+
+msobfLoResLoClr, icon, LS, 16, 16, 4, 30, 700, AwsPaneBullet
+msobfLoResHiClr, icon, HS, 16, 16, 32, 15, 825, none
+//msobfHiResLoClr, icon, LL, 24, 24, 4, 10, -1, none
+//msobfHiResHiClr, icon, HL, 24, 24, 32, 10, -1, none
+

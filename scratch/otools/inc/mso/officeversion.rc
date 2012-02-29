@@ -1,0 +1,248 @@
+//
+//  Office-wide version resource definition file
+//
+//  Usage:
+//		#define VER_APP (or VER_DLL or VER_TYPELIB or none)
+//		#define VER_ORIGINAL_FILENAME "FooBar.Exe"
+//		#define VER_INTERNAL_NAME "FooBar"
+//		#define VER_FILE_DESCRIPTION "FooBar Application"
+//		#include "OfficeVersion.rc"
+//  Optional to add before the #include (must add as a group and
+//  VER_BLOCK must match to VER_LANG and VER_CP)
+//  You should not have to do this except for some extreme cases.
+//  Also note that this is so far over the fit and finish line that it
+//  isn't even funny how much wasted time we spend on this.
+//		#define VER_LANG 0x0000
+//		#define VER_CP 0x04E4
+//		#define VER_BLOCK "000004E4"
+//  Copyright year options
+//		#define VER_COPYRIGHT_START "1998"
+//		#define VER_LEGAL_COPYRIGHT_YEARS "replacement copyright years"
+//  Optional override of the standard major.minor.build.iteration version
+//  (i.e. 11.0.1234.0) format.  When defined, format becomes
+//  year.majorminor.build.iteration (i.e. 2003.1100.1234.0).  Use this to keep
+//  version numbers increasing for legacy components previously versioned by
+//  date. DO NOT USE FOR ANYTHING BUT LEGACY UNMANAGED CODE COMPONENTS.
+//		#define VER_LEGACY_YEAR_BASED_VERSION
+//  Optional override of the product name - default is Office
+//	This should generally not be used
+//		#define VER_PRODUCT_NAME
+//
+
+#include <winver.h>
+
+#ifndef NOOFFICEVERSIONH
+#include "OfficeVersion.h"
+#endif
+
+#define SZVERSION2(r1,r2,r3) #r1 "." #r2 "." #r3
+#define SZVERSION(r1,r2,r3) SZVERSION2(r1,r2,r3)
+
+#ifdef DEBUG
+#define VER_DEBUG                  VS_FF_DEBUG
+#define VER_PRIVATE_BUILD          VS_FF_PRIVATEBUILD
+#define VER_PRE_RELEASE            (VS_FF_PRERELEASE | VS_FF_SPECIALBUILD)
+#else
+#define VER_DEBUG                  0
+#define VER_PRIVATE_BUILD          0
+#if defined(VER_BETA) || defined(VER_ALPHA)
+#define VER_PRE_RELEASE            (VS_FF_PRERELEASE | VS_FF_SPECIALBUILD)
+#else
+#define VER_PRE_RELEASE            0
+#endif
+#endif
+
+#if defined(VER_APP)
+//  We presume Apps (i.e. exes) to be language neutral
+	#define VER_FILE_TYPE          VFT_APP
+	#ifndef VER_LANG
+	#define VER_LANG               0x0000
+	#endif
+	#ifndef VER_CP
+	#define VER_CP                 0x04E4
+	#endif
+	#ifndef VER_BLOCK
+	#define VER_BLOCK              "000004E4"
+	#endif
+#elif defined(VER_DLL)
+//  We presume Dlls to be plug UI or language specific files
+	#define VER_FILE_TYPE          VFT_DLL
+	#ifndef VER_LANG
+	#define VER_LANG               0x0409
+	#endif
+	#ifndef VER_CP
+	#define VER_CP                 0x04E4
+	#endif
+	#ifndef VER_BLOCK
+	#define VER_BLOCK              "040904E4"
+	#endif
+#elif defined(VER_DLL_NEUTRAL)
+//  Unless explicitly told that the DLL is neutral
+	#define VER_FILE_TYPE          VFT_DLL
+	#ifndef VER_LANG
+	#define VER_LANG               0x0000
+	#endif
+	#ifndef VER_CP
+	#define VER_CP                 0x04E4
+	#endif
+	#ifndef VER_BLOCK
+	#define VER_BLOCK              "000004E4"
+	#endif
+#elif defined(VER_TYPELIB)
+//  Typelibs should be neutral
+	#define VER_FILE_TYPE          VFT_UNKNOWN
+	#ifndef VER_LANG
+	#define VER_LANG               0x0000
+	#endif
+	#ifndef VER_CP
+	#define VER_CP                 0x04E4
+	#endif
+	#ifndef VER_BLOCK
+	#define VER_BLOCK              "000004E4"
+	#endif
+#else
+	#define VER_FILE_TYPE          VFT_UNKNOWN
+	#ifndef VER_LANG
+	#define VER_LANG               0x0409
+	#endif
+	#ifndef VER_CP
+	#define VER_CP                 0x04E4
+	#endif
+	#ifndef VER_BLOCK
+	#define VER_BLOCK              "040904E4"
+	#endif
+#endif
+
+#ifdef  VER_LEGACY_YEAR_BASED_VERSION // only for old, year-versioned components
+	// approximate sprintf(VER_MAJORMINOR, "%02d%02d", rmj, rmm)
+	#define _JOIN_(x,y)     x##y
+	#define _JOIN2_(x,y)    _JOIN_(x,y)
+	#define _JOIN0_(x,y)    x##0##y
+	#define _JOIN02_(x,y)   _JOIN0_(x,y)
+
+	#if rmm < 10
+	#define VER_MAJORMINOR _JOIN02_(rmj, rmm)
+	#else
+	#define VER_MAJORMINOR _JOIN2_(rmj, rmm)
+	#endif
+
+	#define VER_FILE_VERSION           VER_LEGACY_YEAR, VER_MAJORMINOR, rup, iBuildIteration
+	#define VER_PRODUCT_VERSION        VER_LEGACY_YEAR, VER_MAJORMINOR, rup, 0
+	#define VER_FILE_VERSION_STRING    SZVERSION(VER_LEGACY_YEAR, VER_MAJORMINOR, rup)
+#else
+	#define VER_FILE_VERSION           rmj, rmm, rup, iBuildIteration
+	#define VER_PRODUCT_VERSION        rmj, rmm, rup, 0
+	#define VER_FILE_VERSION_STRING    SZVERSION(rmj, rmm, rup)
+#endif
+
+#define VER_PRODUCT_VERSION_STRING VER_FILE_VERSION_STRING
+#define VER_FILE_FLAGS_MASK        VS_FFI_FILEFLAGSMASK
+#define VER_FILE_FLAGS             (VER_DEBUG | VER_PRIVATE_BUILD | VER_PRE_RELEASE)
+
+#if !defined(VER_FILE_SUBTYPE)
+#define VER_FILE_SUBTYPE 0
+#endif
+
+#ifdef RC_INVOKED
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION     VER_FILE_VERSION
+PRODUCTVERSION  VER_PRODUCT_VERSION
+FILEFLAGSMASK   VER_FILE_FLAGS_MASK
+FILEFLAGS       VER_FILE_FLAGS
+FILEOS          VER_FILE_OS
+FILETYPE        VER_FILE_TYPE
+FILESUBTYPE     VER_FILE_SUBTYPE
+BEGIN
+BLOCK "StringFileInfo"
+	BEGIN
+	BLOCK VER_BLOCK
+		BEGIN
+		VALUE "CompanyName",       VER_COMPANY_NAME
+		VALUE "FileDescription",   VER_FILE_DESCRIPTION
+		VALUE "FileVersion",       VER_FILE_VERSION_STRING
+		VALUE "InternalName",      VER_INTERNAL_NAME
+		
+		VALUE "LegalCopyright",    VER_LEGAL_COPYRIGHT
+#if defined(VER_LEGAL_COPYRIGHT1)
+		VALUE "LegalCopyright1",   VER_LEGAL_COPYRIGHT1
+#endif
+#if defined(VER_LEGAL_COPYRIGHT2)
+		VALUE "LegalCopyright2",   VER_LEGAL_COPYRIGHT2
+#endif
+#if defined(VER_LEGAL_COPYRIGHT3)
+		VALUE "LegalCopyright3",   VER_LEGAL_COPYRIGHT3
+#endif
+#if defined(VER_LEGAL_COPYRIGHT4)
+		VALUE "LegalCopyright4",   VER_LEGAL_COPYRIGHT4
+#endif
+#if defined(VER_LEGAL_COPYRIGHT5)
+		VALUE "LegalCopyright5",   VER_LEGAL_COPYRIGHT5
+#endif
+#if defined(VER_LEGAL_COPYRIGHT6)
+		VALUE "LegalCopyright6",   VER_LEGAL_COPYRIGHT6
+#endif
+		VALUE "LegalTrademarks1",  VER_LEGAL_TRADEMARK1
+		VALUE "LegalTrademarks2",  VER_LEGAL_TRADEMARK2
+		
+#if defined(VER_LEGAL_TRADEMARK3)
+		VALUE "LegalTrademarks3",  VER_LEGAL_TRADEMARK3
+#endif
+#if defined(VER_LEGAL_TRADEMARK4)
+		VALUE "LegalTrademarks4",  VER_LEGAL_TRADEMARK4
+#endif
+
+		VALUE "OriginalFilename",  VER_ORIGINAL_FILENAME
+		VALUE "ProductName",       VER_PRODUCT_NAME
+		VALUE "ProductVersion",    VER_FILE_VERSION_STRING
+#if defined(DEBUG)
+	#if defined(szVerUser)
+		VALUE "Built by",          szVerUser
+	#else
+		VALUE "Built by",          "UnknownReadOnlyUser"
+	#endif
+#endif
+#if defined(VER_BETA)
+		VALUE "MOSEVersion",       "BETA"
+#endif
+#if defined(VER_ALPHA)
+		VALUE "MOSEVersion",       "ALPHA"
+#endif
+#if defined(QFE)
+//  NOTE:  PETERO:  Concern over the use of the term QFE in a place
+//  visible to the user.  CHG is just something that is easy for us
+//  to understand as not RTM and not an SP build.
+		VALUE "MOSEVersion",        "CHG"
+#endif
+#if defined(SR) || defined(SP)
+		VALUE "MOSEVersion",        "SP1"
+#endif
+#if defined(OLE_SELFREG) || defined(VER_OLE_SELFREG)
+		VALUE "OleSelfRegister",   ""
+#endif
+#if defined(DEBUG)
+		VALUE "Office Common Resource Format", "Debug Only"
+#endif
+#if defined(VER_EXPORT)
+//  REVIEW:  PETERO:  Don't expect this to be used anymore
+		VALUE "Export Controlled", VER_EXPORT
+#endif
+#if defined(VER_RAW_VALUES)
+		VER_RAW_VALUES
+#endif
+
+// version of GDI Plus static library linked into mso.dll.  
+// (symbol is #defined in mso's private resources)
+#if defined(GPVER_PRODUCTVERSION_STR)
+		VALUE "Product Version(GDI)", GPVER_PRODUCTVERSION_STR
+#endif
+		END
+	END
+
+BLOCK "VarFileInfo"
+	BEGIN
+	VALUE "Translation", VER_LANG, VER_CP
+	END
+END
+
+#endif

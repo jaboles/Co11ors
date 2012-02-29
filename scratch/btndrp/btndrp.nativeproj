@@ -1,0 +1,74 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--Import the settings-->
+  <Import Project="$(_NTDRIVE)$(_NTROOT)\env\Env.Settings.targets" />
+  <!--Leaf project Properties-->
+  <PropertyGroup>
+    <OutputPath>$(BinariesDirectory)\inc\$(BuildArchitecture)\vsmso</OutputPath>
+    <ProjectLanguage>None</ProjectLanguage>
+  </PropertyGroup>
+  <!--Leaf Project Items-->
+  <ItemGroup>
+    <Icons Include="icons\*.bmp" />
+  </ItemGroup>
+
+  <Target Name="GenerateTcidMap"
+          Inputs="tbbtn.pl;
+                  tborder.txt;
+                  $(Otools)\inc\gen\msobtn.h"
+          Outputs="$(OutputPath)\tbbtnent.h"
+          >
+
+    <!-- Make sure the output directory exists at this point -->
+    <MakeDir Directories="$(OutputPath)" />    
+
+    <!-- TBBTN.PL : Takes tborder.txt and otools\inc\gen\msobtn.h to generate tbbtnent.h -->
+    <Exec Command="$(PerlCommand) tbbtn.pl tborder.txt $(Otools)\inc\gen\msobtn.h $(OutputPath)" />
+  </Target>
+  
+  <Target Name="GenerateBStrips"
+          Inputs="format.txt;tborder.txt;@(Icons)"
+          Outputs="$(OutputPath)\msotbfor.h;$(OutputPath)\tbbstrip.h;$(OutputPath)\tbbstrip.i;$(IntermediateOutputRelativePath)\tbbstrip.mak;$(OutputPath)\tbbstrip.rc"
+          >
+
+    <MakeDir Directories="$(OutputPath)" />
+    <MakeDir Directories="$(IntermediateOutputRelativePath)" />
+    <Exec Command="$(Otools)\bin\$(ToolsArchitecture)\bstrips.exe tborder.txt format.txt icons $(IntermediateOutputRelativePath) $(OutputPath)\tbbstrip.h $(OutputPath)\tbbstrip.i $(OutputPath)\msotbfor.h $(IntermediateOutputRelativePath)\tbbstrip.mak $(OutputPath)\tbbstrip.rc" />
+
+  </Target>
+
+  <Target Name="GenerateBlzList"
+          Inputs="$(IntermediateOutputRelativePath)\tbbstrip.mak"
+          Outputs="$(IntermediateOutputRelativePath)\tbbstrip.lst" >
+
+    <!-- BSTRIPS has generated a makefile, tbbstrip.mak that contains the list 
+         of all the processed icons to be included as resources. Run it through
+         perl to convert it into a raw file list. -->
+
+    <!-- The regular expression below searches for lines of the form:
+          $(LANG)\foobar.blz \
+          and extracts the foobar.blz part. -->
+    <Exec Command="$(PerlCommand) -ne &quot;print if s/^\s+\$\(LANG\)\\(\w+\.blz)\s*\\/$1/&quot; $(IntermediateOutputRelativePath)\tbbstrip.mak &gt; $(IntermediateOutputRelativePath)\tbbstrip.lst" />
+
+    <!-- Read that file into the @(Blz) item list -->
+    <ReadLinesFromFile File="$(IntermediateOutputRelativePath)\tbbstrip.lst">
+      <Output TaskParameter="Lines" ItemName="Blz" />
+    </ReadLinesFromFile>
+  </Target>
+
+  <Target Name="CompressBStrips"
+          Inputs="$(IntermediateOutputRelativePath)\tbbstrip.lst"
+          Outputs="@(Blz->'$(OutputPath)\%(Filename).blz')"
+          DependsOnTargets="GenerateBlzList" >
+    <!-- Compress all files in @(Blz) using lzbmp -->
+    <Exec Command="$(Otools)\bin\$(ToolsArchitecture)\lzbmp $(IntermediateOutputRelativePath)\%(Blz.Filename).bmp $(OutputPath)\%(Blz.Filename).blz" />
+  </Target>
+
+  <!--Import the targets-->
+  <Import Project="$(_NTDRIVE)$(_NTROOT)\tools\Microsoft.DevDiv.Native.targets" />
+
+  <PropertyGroup>
+    <BuildGeneratedDependsOn>GenerateTcidMap;GenerateBStrips;CompressBStrips</BuildGeneratedDependsOn>
+  </PropertyGroup>
+
+</Project>
