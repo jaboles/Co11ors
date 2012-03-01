@@ -65,6 +65,7 @@ namespace VSIconSwitcher
         void BackupAndPatch()
         {
             SetReplacementOptions();
+            SynchronizationContext context = SynchronizationContext.Current;
 
             if (!KillDevenvIfRunning()) return;
             
@@ -73,29 +74,46 @@ namespace VSIconSwitcher
 
             form.IsBusy = true;
             form.Status = "Backing up files";
-            if (!Directory.Exists(AssetReplacement.Options.BackupFolder))
+            new Thread(new ThreadStart(() =>
             {
-                Directory.CreateDirectory(AssetReplacement.Options.BackupFolder);
-            }
-            foreach (AssetReplacement r in ReplacementList.VS11Ultimate)
-            {
-                form.Status = string.Format("Backing up {0}", r.DestFilePath);
-                r.Backup();
-                form.CurrentProgress++;
-            }
-            form.Status = "Patching resources";
-            foreach (AssetReplacement r in ReplacementList.VS11Ultimate)
-            {
-                form.Status = string.Format("Patching resources in {0}", r.DestFilePath);
-                r.DoReplace();
-                form.CurrentProgress++;
-            }
-            form.Status = "Running devenv /setup";
-            RunDevenvSetup(AssetReplacement.Options.VS11Folder);
+                if (!Directory.Exists(AssetReplacement.Options.BackupFolder))
+                {
+                    Directory.CreateDirectory(AssetReplacement.Options.BackupFolder);
+                }
+                foreach (AssetReplacement r in ReplacementList.VS11Ultimate)
+                {
+                    r.Backup();
+                    form.Invoke(new MethodInvoker(() =>
+                    {
+                        form.Status = string.Format("Backed up {0}", r.DestFilePath);
+                        form.CurrentProgress++;
+                    }));
+                }
 
-            form.Status = null;
-            form.CurrentProgress = 0;
-            form.IsBusy = false;
+                
+                form.Invoke(new MethodInvoker(() =>
+                {
+                    form.Status = "Patching resources";
+                }));
+                foreach (AssetReplacement r in ReplacementList.VS11Ultimate)
+                {
+                    r.DoReplace();
+                    form.Invoke(new MethodInvoker(() =>
+                    {
+                        form.Status = string.Format("Patched resources in {0}", r.DestFilePath);
+                        form.CurrentProgress++;
+                    }));
+                }
+                form.Invoke(new MethodInvoker(() => { form.Status = "Running devenv /setup"; }));
+                RunDevenvSetup(AssetReplacement.Options.VS11Folder);
+
+                form.Invoke(new MethodInvoker(() =>
+                {
+                    form.Status = null;
+                    form.CurrentProgress = 0;
+                    form.IsBusy = false;
+                }));
+            })).Start();
         }
 
         void Undo()

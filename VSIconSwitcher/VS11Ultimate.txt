@@ -133,15 +133,14 @@ I;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.EnterpriseTools.Cl
 B;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.EnterpriseTools.ClassDesignerUI.dll;105,106,300,600
 I;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.QualityTools.CodedUITestUI.dll;104,111
 B;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.QualityTools.CodedUITestUI.dll;6002
+B;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.QualityTools.LoadTestPackageUI.dll;3000-3004
 I;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.QualityTools.LoadTestPackageUI.dll
-B;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.QualityTools.LoadTestPackageUI.dll
 I;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.QualityTools.TestCaseManagementUI.dll
 B;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.QualityTools.TestCaseManagementUI.dll
 I;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.QualityTools.Tips.TuipPackageUI.dll
-I;Common7\IDE\PrivateAssemblies\[lcid]\
-I;Common7\IDE\PrivateAssemblies\[lcid]\
-I;Common7\IDE\PrivateAssemblies\[lcid]\
-I;Common7\IDE\PrivateAssemblies\[lcid]\
+B;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.QualityTools.Tips.TuipPackageUI.dll
+B;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.TeamFoundation.BuildUI.dll
+I;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.TeamFoundation.WorkItemTrackingUI.dll;400
 
 -- MS.VS.Data.Schema.Package became MS.VS.Data.Tools.Package
 M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.Data.Schema.Package.dll;Common7\IDE\Extensions\Microsoft\SQLDB\Microsoft.VisualStudio.Data.Tools.Package.dll;[an]*.bmp

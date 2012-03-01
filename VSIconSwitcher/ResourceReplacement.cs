@@ -85,7 +85,7 @@ namespace VSIconSwitcher
             List<Resource> resourcesToReplace = new List<Resource>();
             foreach (Resource res in srcInfo[resType])
             {
-                if (Ids.Count() == 0 || Ids.Contains(res.Name.Name))
+                if (Ids == null || Ids.Contains(res.Name.Name))
                 {
                     // Find matching resource in destination file
                     Resource dstRes = dstInfo[resType].Single(dr => dr.Name.Equals(res.Name));
@@ -106,8 +106,8 @@ namespace VSIconSwitcher
                     {
                         BitmapResource srcBitmap = res as BitmapResource;
                         BitmapResource dstBitmap = dstRes as BitmapResource;
-                        //Debug.Assert(srcBitmap.Bitmap.Header.biHeight == dstBitmap.Bitmap.Header.biHeight, "Source/destination bitmap height dimension should match.");
-                        //Debug.Assert(srcBitmap.Bitmap.Header.biWidth == dstBitmap.Bitmap.Header.biWidth, "Source/destination bitmap height dimension should match.");
+                        Debug.Assert(srcBitmap.Bitmap.Header.biHeight == dstBitmap.Bitmap.Header.biHeight, "Source/destination bitmap height dimension should match.");
+                        Debug.Assert(srcBitmap.Bitmap.Header.biWidth == dstBitmap.Bitmap.Header.biWidth, "Source/destination bitmap height dimension should match.");
                     }
 
                     resourcesToReplace.Add(res);
