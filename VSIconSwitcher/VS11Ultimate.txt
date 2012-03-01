@@ -89,6 +89,7 @@ M;Common7\IDE\Extensions\Microsoft\Historical Debugger\10.0\HistoricalDebuggerMa
 M;Common7\IDE\Extensions\Microsoft\Historical Search\10.0\Microsoft.VisualStudio.HistoricalSearchMargin.dll;Common7\IDE\CommonExtensions\Microsoft\Intellitrace\11.0.0\Microsoft.IntelliTrace.SearchMargin.11.0.0.dll;;images\*.png
 M;Common7\IDE\CommonExtensions\Microsoft\TemplateProviders\Microsoft.VisualStudio.TemplateProviders.Implementation.dll;;;onlineprovider/defaultpreviewimage.png
 M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.SharePoint.Designers.BusinessDataConnectivity.dll;;;resources/images/*.ico
+I;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.SharePoint.Project.dll;201-203
 M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.XsdDesigner.dll;;*.png
 M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.XsdDesigner.dll;;*.bmp
 M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.XsdDesigner.dll;;*.ico
@@ -100,6 +101,17 @@ M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.ExtensionManager.Implemen
 M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.ExtensionManager.Implementation.dll;;;ui/previewimage.png
 M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DeveloperTools.dll;;*.bmp
 M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DeveloperTools.dll;;*.png
+I;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.ProgressionIcons.dll;100
+I;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.SharePoint.Project.dll;201-203
+I;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.TeamArchitect.ComponentDesigner.DslPackage.dll
+I;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.TeamArchitect.ActivityDesigner.DslPackage.dll
+I;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.TeamArchitect.LayerDesigner.DslPackage.dll
+I;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.TeamArchitect.LogicalClassDesigner.DslPackage.dll
+I;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.TeamArchitect.ModelingProject.dll
+I;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.TeamArchitect.SequenceDesigner.DslPackage.dll
+I;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.TeamArchitect.UseCase.DslPackage.dll
+
+
 M;Common7\IDE\Microsoft.VisualStudio.DataTools.dll;;*.ico
 M;Common7\IDE\Microsoft.VisualStudio.Data.Providers.SqlServer.dll;;*.ico
 M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.SharePoint.ProjectExtensions.Wizards.dll;;*.bmp
@@ -115,7 +127,21 @@ M;Team Tools\Performance Tools\PerfPkg.dll;;*.png
 M;Common7\IDE\Microsoft.Workflow.VSDesigner.dll;;*.bmp
 M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.Tools.Office.AddInProject.dll;;*.bmp
 M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.Tools.Applications.Project.dll;;*.bmp
-
+I;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.ReportDesignerUI.dll;200-203,206,207
+B;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.ReportDesignerUI.dll;101,103
+I;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.EnterpriseTools.ClassDesignerUI.dll
+B;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.EnterpriseTools.ClassDesignerUI.dll;105,106,300,600
+I;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.QualityTools.CodedUITestUI.dll;104,111
+B;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.QualityTools.CodedUITestUI.dll;6002
+I;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.QualityTools.LoadTestPackageUI.dll
+B;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.QualityTools.LoadTestPackageUI.dll
+I;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.QualityTools.TestCaseManagementUI.dll
+B;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.QualityTools.TestCaseManagementUI.dll
+I;Common7\IDE\PrivateAssemblies\[lcid]\Microsoft.VisualStudio.QualityTools.Tips.TuipPackageUI.dll
+I;Common7\IDE\PrivateAssemblies\[lcid]\
+I;Common7\IDE\PrivateAssemblies\[lcid]\
+I;Common7\IDE\PrivateAssemblies\[lcid]\
+I;Common7\IDE\PrivateAssemblies\[lcid]\
 
 -- MS.VS.Data.Schema.Package became MS.VS.Data.Tools.Package
 M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.Data.Schema.Package.dll;Common7\IDE\Extensions\Microsoft\SQLDB\Microsoft.VisualStudio.Data.Tools.Package.dll;[an]*.bmp

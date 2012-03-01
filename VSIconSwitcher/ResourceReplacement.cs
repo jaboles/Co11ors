@@ -33,7 +33,7 @@ namespace VSIconSwitcher
             s_pathTranslate = pathTranslator;
         }
 
-        private NativeResourceReplacement(string filename, ResourceType resType)
+        public NativeResourceReplacement(string filename, ResourceType resType)
             : base(filename)
         {
             m_resType = resType;
@@ -85,7 +85,7 @@ namespace VSIconSwitcher
             List<Resource> resourcesToReplace = new List<Resource>();
             foreach (Resource res in srcInfo[resType])
             {
-                if (Ids.Contains(res.Name.Name))
+                if (Ids.Count() == 0 || Ids.Contains(res.Name.Name))
                 {
                     // Find matching resource in destination file
                     Resource dstRes = dstInfo[resType].Single(dr => dr.Name.Equals(res.Name));

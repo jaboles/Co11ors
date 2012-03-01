@@ -59,7 +59,7 @@ namespace VSIconSwitcher
                 }
                 else
                 {
-                    string idString = stringParts[2];
+                    string idString = null;
                     if (typeIdentifier.Equals("Icon") || typeIdentifier.Equals("I"))
                     {
                         resType = ResourceType.Icon;
@@ -73,28 +73,35 @@ namespace VSIconSwitcher
                         Debug.Fail("Unknown type identifier: " + typeIdentifier);
                     }
 
-                    List<string> ids = new List<string>();
-                    foreach (string s in idString.Split(','))
+                    if (stringParts.Length > 2)
                     {
-                        string idStr = s.Trim();
-                        if (idStr.Contains('-'))
+                        idString = stringParts[2];
+                        List<string> ids = new List<string>();
+                        foreach (string s in idString.Split(','))
                         {
-                            string[] parts = idStr.Split('-');
-                            int lower = Convert.ToInt32(parts[0].Trim());
-                            int upper = Convert.ToInt32(parts[1].Trim());
-                            Debug.Assert(lower <= upper, "Range should be specified <lower>-<upper>");
-                            for (int i = lower; i <= upper; i++)
+                            string idStr = s.Trim();
+                            if (idStr.Contains('-'))
                             {
-                                ids.Add(i.ToString());
+                                string[] parts = idStr.Split('-');
+                                int lower = Convert.ToInt32(parts[0].Trim());
+                                int upper = Convert.ToInt32(parts[1].Trim());
+                                Debug.Assert(lower <= upper, "Range should be specified <lower>-<upper>");
+                                for (int i = lower; i <= upper; i++)
+                                {
+                                    ids.Add(i.ToString());
+                                }
+                            }
+                            else
+                            {
+                                ids.Add(idStr);
                             }
                         }
-                        else
-                        {
-                            ids.Add(idStr);
-                        }
+                        list.Add(new NativeResourceReplacement(fileName, resType, ids.ToArray()));
                     }
-
-                    list.Add(new NativeResourceReplacement(fileName, resType, ids.ToArray()));
+                    else
+                    {
+                        list.Add(new NativeResourceReplacement(fileName, resType));
+                    }
                 }
             }
 
