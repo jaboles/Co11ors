@@ -114,6 +114,7 @@ I;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.TeamArchitect.UseCase.Dsl
 
 M;Common7\IDE\Microsoft.VisualStudio.DataTools.dll;;*.ico
 M;Common7\IDE\Microsoft.VisualStudio.Data.Providers.SqlServer.dll;;*.ico
+I;Common7\IDE\Microsoft.VisualStudio.Activities.dll;100
 M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.SharePoint.ProjectExtensions.Wizards.dll;;*.bmp
 M;Common7\IDE\Extensions\Microsoft\SharePoint\Extensions\Project\Microsoft.VisualStudio.SharePoint.ProjectExtensions.VSPackage.dll;;*.bmp
 M;Common7\IDE\Extensions\Microsoft\SharePoint\Extensions\BDC\Microsoft.VisualStudio.SharePoint.ProjectExtensions.Bdc.dll;;*.bmp
@@ -166,3 +167,4 @@ M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.TeamArchitect.ModelExplor
 --M;Common7\IDE\ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.Common.Library.dll;Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\Microsoft.TeamFoundation.WorkItemTracking.Controls.dll;...
 
 
+--F;[pf]\Common Files\microsoft shared\TextTemplating\10.0\TextTemplate.ico;[pf]\Common Files\microsoft shared\TextTemplating\11.0\TextTemplate.ico
