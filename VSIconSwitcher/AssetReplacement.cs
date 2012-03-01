@@ -76,7 +76,7 @@ namespace VSIconSwitcher
         {
             if (!File.Exists(backupLocation))
             {
-                File.Copy(itemPath, backupLocation, false);
+                FileCopyAndPreserveDate(itemPath, backupLocation, false);
             }
         }
 
@@ -108,7 +108,7 @@ namespace VSIconSwitcher
         {
             if (File.Exists(backupLocation))
             {
-                File.Copy(backupLocation, itemPath, false);
+                FileCopyAndPreserveDate(backupLocation, itemPath, true);
             }
         }
 
@@ -121,6 +121,15 @@ namespace VSIconSwitcher
 
                 return s_options;
             }
+        }
+
+        protected void FileCopyAndPreserveDate(string src, string dst, bool overwrite)
+        {
+            File.Copy(src, dst, overwrite);
+            FileInfo srcInfo = new FileInfo(src);
+            FileInfo dstInfo = new FileInfo(dst);
+            dstInfo.CreationTimeUtc = srcInfo.CreationTimeUtc;
+            dstInfo.LastWriteTimeUtc = srcInfo.LastWriteTimeUtc;
         }
 
         private IEnumerable<Tuple<string, string>> ReplaceCultureTokens(string path)

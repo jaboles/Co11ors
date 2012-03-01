@@ -15,10 +15,13 @@ namespace mrd
     {
         static void Main(string[] args)
         {
-            string searchPath = "c:\\Program Files (x86)\\Microsoft Visual Studio 11.0";
+            //string searchPath = "c:\\Program Files (x86)\\Microsoft Visual Studio 11.0";
             //string searchPath = @"C:\Windows\Microsoft.NET\assembly\GAC_MSIL";
             string filenameMask = "*.dll";
-            string outputPath = "c:\\mrd_VS11";
+            //string outputPath = "c:\\mrd_VS11";
+
+            string searchPath = @"C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\CommonExtensions\Microsoft\IntelliTrace\11.0.0";
+            string outputPath = "c:\\mrd_Intellitrace11";
 
             IEnumerable files = Directory.EnumerateFiles(searchPath, filenameMask, SearchOption.AllDirectories);
             foreach (string f in files)

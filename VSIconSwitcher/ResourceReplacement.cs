@@ -39,24 +39,24 @@ namespace VSIconSwitcher
             m_resType = resType;
         }
 
-        public NativeResourceReplacement(string filename, ResourceType resType, params int[] ids)
+        public NativeResourceReplacement(string filename, ResourceType resType, params string[] ids)
             : this(filename, resType)
         {
             m_ids = ids;
         }
-        public NativeResourceReplacement(string filename, ResourceType resType, int id)
+        public NativeResourceReplacement(string filename, ResourceType resType, string id)
             : this(filename, resType)
         {
-            m_ids = new int[] { id };
+            m_ids = new string[] { id };
         }
         public NativeResourceReplacement(string filename, ResourceType resType, params Range[] ranges)
             : this(filename, resType)
         {
-            List<int> ids = new List<int>();
+            List<string> ids = new List<string>();
             foreach (Range range in ranges)
             {
                 for (int i = range.Lower; i <= range.Upper; i++)
-                    ids.Add(i);
+                    ids.Add(i.ToString());
             }
             m_ids = ids.ToArray();
         }
@@ -85,7 +85,7 @@ namespace VSIconSwitcher
             List<Resource> resourcesToReplace = new List<Resource>();
             foreach (Resource res in srcInfo[resType])
             {
-                if (res.Name.IsIntResource() && Ids.Any(id => id == res.Name.Id.ToInt32()))
+                if (Ids.Contains(res.Name.Name))
                 {
                     // Find matching resource in destination file
                     Resource dstRes = dstInfo[resType].Single(dr => dr.Name.Equals(res.Name));
@@ -124,7 +124,7 @@ namespace VSIconSwitcher
             srcInfo.Unload();
         }
 
-        public IEnumerable<int> Ids { get { return m_ids; } }
+        public IEnumerable<string> Ids { get { return m_ids; } }
         public bool NeedsGAC
         {
             get
@@ -137,7 +137,7 @@ namespace VSIconSwitcher
         }
         public ResourceType ResourceType { get { return m_resType; } }
 
-        private IEnumerable<int> m_ids;
+        private IEnumerable<string> m_ids;
         private bool? m_needsGac;
         private ResourceType m_resType;
         private static Func<string, string> s_pathTranslate;

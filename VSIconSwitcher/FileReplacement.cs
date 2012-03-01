@@ -16,7 +16,7 @@ namespace VSIconSwitcher
 
         public override void  CopyResources(string sourceFile, string destFile)
         {
-            File.Copy(sourceFile, destFile, true);
+            FileCopyAndPreserveDate(sourceFile, destFile, true);
         }
     }
 }

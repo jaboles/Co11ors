@@ -30,7 +30,7 @@ namespace VSIconSwitcher
                 if (string.IsNullOrEmpty(line))
                     line = sr.ReadLine().Trim();
 
-                if (line.StartsWith("--"))
+                if (line.StartsWith("--") || string.IsNullOrWhiteSpace(line))
                     continue;
 
                 string[] stringParts = line.Split(';');
@@ -73,7 +73,7 @@ namespace VSIconSwitcher
                         Debug.Fail("Unknown type identifier: " + typeIdentifier);
                     }
 
-                    List<int> ids = new List<int>();
+                    List<string> ids = new List<string>();
                     foreach (string s in idString.Split(','))
                     {
                         string idStr = s.Trim();
@@ -85,12 +85,12 @@ namespace VSIconSwitcher
                             Debug.Assert(lower <= upper, "Range should be specified <lower>-<upper>");
                             for (int i = lower; i <= upper; i++)
                             {
-                                ids.Add(i);
+                                ids.Add(i.ToString());
                             }
                         }
                         else
                         {
-                            ids.Add(Convert.ToInt32(idStr));
+                            ids.Add(idStr);
                         }
                     }
 

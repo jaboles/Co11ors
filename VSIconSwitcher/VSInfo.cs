@@ -110,18 +110,34 @@ namespace VSIconSwitcher
         {
             get
             {
-                RegistryKey k = Registry.LocalMachine.OpenSubKey(string.Format(@"Software\Microsoft\{0}\{1}", AppID, Version));
-                if (k != null)
+                if (m_vsRoot == null)
                 {
-                    string installDir = k.GetValue("InstallDir") as string;
-                    installDir = installDir.Substring(0, installDir.IndexOf("Common7"));
-                    k.Close();
-                    if (installDir != null)
+                    RegistryKey k = Registry.LocalMachine.OpenSubKey(string.Format(@"Software\Microsoft\{0}\{1}", AppID, Version));
+                    if (k != null)
                     {
-                        return installDir;
+                        string installDir = k.GetValue("InstallDir") as string;
+                        m_vsRoot = installDir.Substring(0, installDir.IndexOf("Common7"));
+                        k.Close();
                     }
                 }
-                return null;
+                return m_vsRoot;
+            }
+        }
+
+        public string VSExe
+        {
+            get
+            {
+                if (m_vsExe == null)
+                {
+                    RegistryKey k = Registry.LocalMachine.OpenSubKey(string.Format(@"Software\Microsoft\{0}\{1}\Setup\VS", AppID, Version));
+                    if (k != null)
+                    {
+                        m_vsExe = k.GetValue("EnvironmentPath") as string;
+                        k.Close();
+                    }
+                }
+                return m_vsExe;
             }
         }
 
@@ -132,6 +148,8 @@ namespace VSIconSwitcher
 
         private CultureInfo m_defaultLanguage;
         private IList<CultureInfo> m_installedLanguages;
+        private string m_vsRoot;
+        private string m_vsExe;
 
         // A list of the known products
         private static IEnumerable<VSInfo> s_knownVersions = new VSInfo[] {

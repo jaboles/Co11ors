@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using System.Globalization;
+using System.ComponentModel;
 
 namespace VSIconSwitcher
 {
@@ -64,8 +65,9 @@ namespace VSIconSwitcher
         void BackupAndPatch()
         {
             SetReplacementOptions();
-            var context = TaskScheduler.FromCurrentSynchronizationContext();
 
+            if (!KillDevenvIfRunning()) return;
+            
             form.ProgressMax = 2 * ReplacementList.VS11Ultimate.Count();
             form.CurrentProgress = 0;
 
@@ -77,12 +79,14 @@ namespace VSIconSwitcher
             }
             foreach (AssetReplacement r in ReplacementList.VS11Ultimate)
             {
+                form.Status = string.Format("Backing up {0}", r.DestFilePath);
                 r.Backup();
                 form.CurrentProgress++;
             }
             form.Status = "Patching resources";
             foreach (AssetReplacement r in ReplacementList.VS11Ultimate)
             {
+                form.Status = string.Format("Patching resources in {0}", r.DestFilePath);
                 r.DoReplace();
                 form.CurrentProgress++;
             }
@@ -97,7 +101,8 @@ namespace VSIconSwitcher
         void Undo()
         {
             SetReplacementOptions();
-            var context = TaskScheduler.FromCurrentSynchronizationContext();
+
+            if (!KillDevenvIfRunning()) return;
 
             form.Status = "Undoing changes";
             form.CurrentProgress = 0;
@@ -106,25 +111,17 @@ namespace VSIconSwitcher
             form.IsBusy = true;
             foreach (AssetReplacement r in ReplacementList.VS11Ultimate)
             {
-                Task.Factory.StartNew(() =>
-                {
-                    r.Undo();
-                }, CancellationToken.None, TaskCreationOptions.None, Scheduler).ContinueWith((task) =>
-                {
-                    form.CurrentProgress++;
-                }, context);
+                form.Status = string.Format("Undoing changes to {0}", r.DestFilePath);
+                r.Undo();
+                form.CurrentProgress++;
             }
 
             form.Status = "Running devenv /setup";
-            Task.Factory.StartNew(() =>
-            {
-                RunDevenvSetup(AssetReplacement.Options.VS11Folder);
-            }, CancellationToken.None, TaskCreationOptions.None, Scheduler).ContinueWith((task) =>
-            {
-                form.Status = null;
-                form.CurrentProgress = 0;
-                form.IsBusy = false;
-            }, context);
+            RunDevenvSetup(AssetReplacement.Options.VS11Folder);
+
+            form.Status = null;
+            form.CurrentProgress = 0;
+            form.IsBusy = false;
         }
 
         void SetReplacementOptions()
@@ -138,8 +135,44 @@ namespace VSIconSwitcher
 
         void RunDevenvSetup(string folder)
         {
-            Process p = Process.Start(Path.Combine(folder, "Common7\\IDE\\devenv.exe"), "/setup");
+            Process p = Process.Start(m_dstVS.VSExe, "/setup");
             p.WaitForExit();
+        }
+
+        bool KillDevenvIfRunning()
+        {
+            Func<IEnumerable<Process>> GetDstVSRunning = () => Process.GetProcesses().Where(proc =>
+            {
+                if (!m_dstVS.VSExe.ToLower().Contains(proc.ProcessName.ToLower())) return false;
+                try
+                {
+                    return proc.MainModule.FileName.Equals(m_dstVS.VSExe, StringComparison.OrdinalIgnoreCase);
+                }
+                catch (Win32Exception)
+                {
+                    // Probably a 64-bit process.
+                    return false;
+                }
+            });
+
+            if (GetDstVSRunning().Count() > 0)
+            {
+                DialogResult dr = MessageBox.Show("At least one instance of Visual Studio 11 is running. Kill?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dr == DialogResult.Yes)
+                {
+                    foreach (Process p in GetDstVSRunning())
+                    {
+                        p.Kill();
+                    }
+                    SpinWait.SpinUntil(() => GetDstVSRunning().Count() == 0, TimeSpan.FromSeconds(10));
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         string DefaultBackupPath

@@ -1,13 +1,27 @@
 ﻿-- Recognized varables:
 -- [lcid]: Language ID e.g. "1033"
 -- [langshort]: Short language name e.g. "en"
+-- [an]: assembly name e.g. Microsoft.VisualStudio.Data.Schema.Package
 I;Common7\IDE\devenv.exe;1200,1202,1203,6826
 B;Common7\IDE\[lcid]\cmddefui.dll;2001-2008,2012-2017,2020,2022-2035
 I;Common7\IDE\[lcid]\ExtWizrdUI.dll;174
 I;Common7\IDE\[lcid]\msenvui.dll;1200,4911
 B;Common7\IDE\[lcid]\msenvui.dll;300,304,305,6650,6651
+I;Common7\IDE\[lcid]\Microsoft.VisualStudio.SilverlightUI.dll;401,402,9006,9007,9008,9009,9010-9012,9014-9021
+B;Common7\IDE\[lcid]\Microsoft.VisualStudio.SilverlightUI.dll;IDB_IMAGELIST
+B;Common7\IDE\[lcid]\Microsoft.VisualStudio.DesignUI.dll;10100
+B;Common7\IDE\[lcid]\Microsoft.VisualStudio.EditorsUI.dll;2
+I;Common7\IDE\[lcid]\Microsoft.VisualStudio.Web.ApplicationUI.dll;9001-9009
+B;Common7\IDE\[lcid]\Microsoft.VisualStudio.Web.ApplicationUI.dll;IDB_IMAGELIST
+B;Common7\IDE\[lcid]\Microsoft.VisualStudio.Windows.FormsUI.dll;2000-2004,2100-2113,2200-2205,2300-2304,2400-2404,2500-2504,2600-2605,2700-2720
+B;Common7\IDE\[lcid]\Microsoft.VSDesignerUI.dll;5-6,11-14,21-24
+B;Common7\IDE\[lcid]\Microsoft.Workflow.VSDesignerUI.dll;125-128
+I;Common7\IDE\[lcid]\Microsoft.Workflow.VSDesignerUI.dll;104-108,110
+B;Common7\IDE\[lcid]\WorkflowProjectUI.dll;136
+I;Common7\IDE\[lcid]\WorkflowProjectUI.dll;104,107,128,130,132,134-138,142
 B;Common7\IDE\msenv.dll;327,328,1268,1423,1425,1427,6000,6100,7003
 I;Common7\IDE\msenv.dll;300,1207,6807-6808,6810-6827,6830
+I;Common7\IDE\vssln.dll;217
 F;Common7\IDE\Extensibility Projects\Mcpp\*.ico
 F;Common7\IDE\Extensibility Projects\Mcpp\[lcid]\*.ico
 F;Common7\IDE\Extensibility Projects\VCATL\*.ico
@@ -18,6 +32,14 @@ B;Common7\IDE\VS SCC\[lcid]\VssProviderui.dll;1,4003
 I;Common7\IDE\VS SCC\[lcid]\VssProviderui.dll;5000,30000
 B;Common7\IDE\Xml\[lcid]\Microsoft.XmlEditorUI.dll;200
 I;Common7\IDE\Xml\[lcid]\Microsoft.XmlEditorUI.dll;100-103,105,107-113
+B;Common7\Packages\Compsvcspkg.dll;1011
+I;Common7\Packages\dirprj.dll;314,315,317
+I;Common7\Packages\fpeditax.dll;12,14
+B;Common7\Packages\htmled.dll;210,212,213,220
+I;Common7\Packages\htmled.dll;231-241
+B;Common7\Packages\mswebprj.dll;333
+I;Common7\Packages\mswebprj.dll;100,101,4039,4503,4504,4506,4510,4516,4517,4518,4520,4528-4533,4535,4537-4540,4542,4544,4548,4559,4700-4703,4709,4722-4729,4731-4736
+B;Common7\Packages\webdirprj.dll;523;4617
 B;Common7\Packages\Debugger\[lcid]\vsdebugui.dll;297,299-302,308,5123,5124,5127
 B;Common7\Packages\[lcid]\csspkgui.dll;200,4000,4100
 I;Common7\Packages\[lcid]\csspkgui.dll;1
@@ -58,8 +80,26 @@ I;Visual Studio Tools for Office\vspkgs\VSTOWordClientPkg.dll;300-301
 B;Visual Studio Tools for Office\vspkgs\[lcid]\VSTOExcelClientPkgUI.dll;120-122
 B;Visual Studio Tools for Office\vspkgs\[lcid]\VSTOWordClientPkgUI.dll;120
 
---M;Common7\IDE\Extensions\Microsoft\Historical Debugger\10.0\HistoricalDebuggerMargin.dll;Common7\IDE\CommonExtensions\Microsoft\Intellitrace\11.0.0\Microsoft.Intellitrace.DebuggerMargin.11.0.0.dll;;images\*.png
+I;Common7\IDE\PrivateAssemblies\[lcid]\eftproject.dll;109
+B;Common7\IDE\PrivateAssemblies\[lcid]\MetricsPackageUI.dll;300
+
+M;Common7\IDE\Microsoft.VisualStudio.Platform.WindowManagement.dll;;*.bmp
+
+M;Common7\IDE\Extensions\Microsoft\Historical Debugger\10.0\HistoricalDebuggerMargin.dll;Common7\IDE\CommonExtensions\Microsoft\Intellitrace\11.0.0\Microsoft.Intellitrace.DebuggerMargin.11.0.0.dll;;images\*.png
+M;Common7\IDE\Extensions\Microsoft\Historical Search\10.0\Microsoft.VisualStudio.HistoricalSearchMargin.dll;Common7\IDE\CommonExtensions\Microsoft\Intellitrace\11.0.0\Microsoft.IntelliTrace.SearchMargin.11.0.0.dll;;images\*.png
+M;Common7\IDE\CommonExtensions\Microsoft\TemplateProviders\Microsoft.VisualStudio.TemplateProviders.Implementation.dll;;;onlineprovider/defaultpreviewimage.png
+M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.SharePoint.Designers.BusinessDataConnectivity.dll;;;resources/images/*.ico
+M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.XsdDesigner.dll;;*.png
+M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.XsdDesigner.dll;;*.bmp
+M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.XsdDesigner.dll;;*.ico
+M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.XsdDesigner.dll;;;resources/images/*.png
 M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.CodeAnalysis.Sdk.UI.dll;;*.png
+M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.ExtensionsExplorer.UI.dll;;;images/details.png
+M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.ExtensionsExplorer.UI.dll;;;images/list.png
+M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.ExtensionManager.Implementation.dll;;;ui/icon.png
+M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.ExtensionManager.Implementation.dll;;;ui/previewimage.png
+M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DeveloperTools.dll;;*.bmp
+M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DeveloperTools.dll;;*.png
 M;Common7\IDE\Microsoft.VisualStudio.DataTools.dll;;*.ico
 M;Common7\IDE\Microsoft.VisualStudio.Data.Providers.SqlServer.dll;;*.ico
 M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.SharePoint.ProjectExtensions.Wizards.dll;;*.bmp
@@ -75,3 +115,29 @@ M;Team Tools\Performance Tools\PerfPkg.dll;;*.png
 M;Common7\IDE\Microsoft.Workflow.VSDesigner.dll;;*.bmp
 M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.Tools.Office.AddInProject.dll;;*.bmp
 M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.Tools.Applications.Project.dll;;*.bmp
+
+
+-- MS.VS.Data.Schema.Package became MS.VS.Data.Tools.Package
+M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.Data.Schema.Package.dll;Common7\IDE\Extensions\Microsoft\SQLDB\Microsoft.VisualStudio.Data.Tools.Package.dll;[an]*.bmp
+M;Common7\IDE\ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.dll;Common7\IDE\ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.Client.dll;[an].Resources.Commands.bmp
+-- TODO; look at this one; M;Common7\IDE\ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.dll;Common7\IDE\ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.Common.dll;[an].Resources.Commands.bmp
+M;Common7\IDE\PrivateAssemblies\Microsoft.TeamFoundation.Build.Workflow.dll;Common7\IDE\ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.Build.Workflow.dll;*.png
+M;Common7\IDE\PrivateAssemblies\Microsoft.TeamFoundation.TestManagement.Controls.dll;;*.bmp
+M;Common7\IDE\PrivateAssemblies\Microsoft.TeamFoundation.TestManagement.Controls.dll;;;teststeps/images/*.png
+M;Common7\IDE\WindowsFormsIntegration.Package.dll;;*.bmp
+M;Common7\IDE\WindowsFormsIntegration.Design.dll;;*.ico
+M;Common7\IDE\CommonExtensions\Platform\Debugger\VsDebugPresentationPackage.dll;;Resources.imagelis.bmp
+M;Common7\IDE\CommonExtensions\Platform\Debugger\VsDebugPresentationPackage.dll;;;editorsystem/ui/images/*.png
+M;Common7\IDE\CommonExtensions\Platform\Debugger\VsDebugPresentationPackage.dll;;;debuggertoolwindows/datatips/pinnabletips/ui/images/*.png
+M;Common7\IDE\CommonExtensions\Platform\Debugger\VsDebugPresentationPackage.dll;;;debuggertoolwindows/threadwindow/images/*.png
+M;Common7\IDE\CommonExtensions\Platform\Debugger\VsDebugPresentationPackage.dll;;;debuggertoolwindows/threadwindow/images/categories/*.png
+M;Common7\IDE\Microsoft.WebPublisher.dll;;*.bmp
+M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.TestTools.UITest.Recorder.dll;;*.bmp
+M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.TeamArchitect.LayerDesigner.DslPackage.dll;;;customcode\layerexplorer\resources\*
+M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.TeamArchitect.ManagedPackageFramework.dll;;*.bmp
+M;Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.TeamArchitect.ModelExplorer.dll;;;resources/images/*
+
+--M;Common7\IDE\ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.Common.Library.dll;Common7\IDE\PrivateAssemblies\Microsoft.TeamFoundation.WorkItemTracking.Controls.dll;...
+--M;Common7\IDE\ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.Common.Library.dll;Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\Microsoft.TeamFoundation.WorkItemTracking.Controls.dll;...
+
+
